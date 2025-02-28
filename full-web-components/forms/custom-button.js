@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomButton extends HTMLElement {
     constructor() {
         super();
@@ -48,4 +47,3 @@ class CustomButton extends HTMLElement {
 }
 
 customElements.define("custom-button", CustomButton);
-</script>
