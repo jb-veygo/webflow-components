@@ -11,7 +11,6 @@
  *      });
  */
 
-<script>
 class CustomRichTextEditor extends HTMLElement {
     constructor() {
         super();
@@ -99,4 +98,3 @@ class CustomRichTextEditor extends HTMLElement {
 }
 
 customElements.define("custom-rich-text-editor", CustomRichTextEditor);
-</script>
