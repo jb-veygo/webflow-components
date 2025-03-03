@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomCheckbox extends HTMLElement {
     constructor() {
         super();
@@ -85,4 +84,3 @@ class CustomCheckbox extends HTMLElement {
 }
 
 customElements.define("custom-checkbox", CustomCheckbox);
-</script>
