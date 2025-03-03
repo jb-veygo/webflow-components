@@ -13,7 +13,6 @@
  *      });
  */
 
-<script> 
 class CustomSelect extends HTMLElement {
     static get observedAttributes() {
         return ["options", "placeholder"];
@@ -116,4 +115,3 @@ class CustomSelect extends HTMLElement {
 }
 
 customElements.define("custom-select", CustomSelect);
-</script>
