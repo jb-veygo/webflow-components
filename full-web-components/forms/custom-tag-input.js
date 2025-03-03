@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomTagInput extends HTMLElement {
     static get observedAttributes() {
         return ["placeholder"];
@@ -152,4 +151,3 @@ class CustomTagInput extends HTMLElement {
 }
 
 customElements.define("custom-tag-input", CustomTagInput);
-</script>
