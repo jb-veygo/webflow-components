@@ -12,7 +12,7 @@
  *          console.log('Selected option:', e.detail.selected);
  *      });
  */
-<script>
+
 class CustomRadioGroup extends HTMLElement {
     static get observedAttributes() {
         return ["options", "name"];
@@ -108,4 +108,3 @@ class CustomRadioGroup extends HTMLElement {
 }
 
 customElements.define("custom-radio-group", CustomRadioGroup);
-</script>
