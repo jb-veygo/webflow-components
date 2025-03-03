@@ -13,7 +13,6 @@
  *      });
  */
 
-<script>
 class CustomTextarea extends HTMLElement {
     static get observedAttributes() {
         return ["placeholder", "rows"];
@@ -77,4 +76,3 @@ class CustomTextarea extends HTMLElement {
 }
 
 customElements.define("custom-textarea", CustomTextarea);
-</script>
