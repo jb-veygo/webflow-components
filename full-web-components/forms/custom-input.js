@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomInput extends HTMLElement {
     static get observedAttributes() { return ["placeholder", "value", "type"]; }
 
@@ -64,4 +63,3 @@ class CustomInput extends HTMLElement {
 }
 
 customElements.define("custom-input", CustomInput);
-</script>
