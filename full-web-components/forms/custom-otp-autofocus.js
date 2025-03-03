@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomOtpAutofocus extends HTMLElement {
     static get observedAttributes() {
         return ["length"];
@@ -89,4 +88,3 @@ class CustomOtpAutofocus extends HTMLElement {
 }
 
 customElements.define("custom-otp-autofocus", CustomOtpAutofocus);
-</script>
