@@ -12,7 +12,6 @@
  *      });
  */
 
-<script>
 class CustomMultiSelect extends HTMLElement {
     static get observedAttributes() { return ["options"]; }
 
@@ -129,4 +128,3 @@ class CustomMultiSelect extends HTMLElement {
 }
 
 customElements.define("custom-multi-select", CustomMultiSelect);
-</script>
