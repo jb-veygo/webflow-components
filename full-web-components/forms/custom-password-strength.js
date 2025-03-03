@@ -11,7 +11,6 @@
  *      });
  */
 
-<script>
 class CustomPasswordStrength extends HTMLElement {
     constructor() {
         super();
@@ -115,4 +114,3 @@ class CustomPasswordStrength extends HTMLElement {
 }
 
 customElements.define("custom-password-strength", CustomPasswordStrength);
-</script>
