@@ -13,7 +13,6 @@
  *      });
  */
 
-<script>
 class CustomToggle extends HTMLElement {
     static get observedAttributes() {
         return ["label"];
@@ -98,4 +97,3 @@ class CustomToggle extends HTMLElement {
 }
 
 customElements.define("custom-toggle", CustomToggle);
-</script>
