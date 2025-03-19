@@ -20,64 +20,47 @@ class CustomCombobox extends HTMLElement {
     }
 
     render() {
-        this.shadowRoot.innerHTML = '';
-        console.log("Creating combobox structure...");
+        this.shadowRoot.innerHTML = `
+            <div class="combobox-wrapper">
+                <custom-popover class="combobox-popover">
+                    <button class="combobox-trigger" aria-haspopup="true" aria-expanded="false">
+                        <span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>
+                    </button>
+                    <custom-command class="combobox-command"></custom-command>
+                </custom-popover>
+            </div>
+            <style>
+                .combobox-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    position: relative;
+                }
 
-        // Create Wrapper
-        this.wrapper = document.createElement("div");
-        this.wrapper.classList.add("combobox-wrapper");
+                .combobox-trigger {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 0.5rem;
+                    padding: 0.75rem;
+                    background: white;
+                    cursor: pointer;
+                    transition: border-color 0.2s ease-in-out;
+                }
 
-        // Reference Existing Popover Component
-        this.popover = document.createElement("custom-popover");
-        this.popover.classList.add("combobox-popover");
-
-        // Reference Existing Command Component
-        this.command = document.createElement("custom-command");
-        this.command.classList.add("combobox-command");
-        this.command.setAttribute("options", JSON.stringify(this.options));
-
-        // Create Trigger Button
-        this.triggerButton = document.createElement("button");
-        this.triggerButton.classList.add("combobox-trigger");
-        this.triggerButton.setAttribute("aria-haspopup", "true");
-        this.triggerButton.setAttribute("aria-expanded", "false");
-        this.triggerButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
-
-        // Append elements to the popover
-        this.popover.appendChild(this.triggerButton);
-        this.popover.appendChild(this.command);
-        this.wrapper.appendChild(this.popover);
-        this.shadowRoot.appendChild(this.wrapper);
-
-        console.log("Applying styles...");
-        // Styles
-        const style = document.createElement("style");
-        style.textContent = `
-            .combobox-wrapper {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                position: relative;
-            }
-
-            .combobox-trigger {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                padding: 0.75rem;
-                background: white;
-                cursor: pointer;
-                transition: border-color 0.2s ease-in-out;
-            }
-
-            .combobox-trigger:focus {
-                border-color: #1e40af;
-                box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
-            }
+                .combobox-trigger:focus {
+                    border-color: #1e40af;
+                    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+                }
+            </style>
         `;
-        this.shadowRoot.appendChild(style);
+        
+        this.popover = this.shadowRoot.querySelector("custom-popover");
+        this.command = this.shadowRoot.querySelector("custom-command");
+        this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
+        
+        this.command.setAttribute("options", JSON.stringify(this.options));
 
         console.log("Attaching event listeners...");
         // Event Listeners
