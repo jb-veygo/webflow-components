@@ -6,11 +6,16 @@ class CustomInput extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
-
-        // Wrapper
         this.wrapper = document.createElement("div");
-        this.wrapper.classList.add("input-wrapper");
+        this.render();
+    }
 
+    render() {
+        this.shadowRoot.innerHTML = "";
+        
+        // Wrapper
+        this.wrapper.classList.add("input-wrapper");
+        
         // Label
         this.label = document.createElement("label");
         this.label.classList.add("input-label");
@@ -93,32 +98,10 @@ class CustomInput extends HTMLElement {
                 padding: 0 var(--spacing-xs);
             }
 
-            /* Variants */
-            .input-container.outline {
-                border: 2px solid var(--color-primary);
-            }
-
-            .input-container.ghost {
-                border: none;
-                background: transparent;
-            }
-
             .input-container:focus-within {
                 border-color: var(--color-primary-dark);
             }
 
-            /* Sizes */
-            .custom-input.sm { font-size: 14px; padding: var(--spacing-xs); }
-            .custom-input.md { font-size: 16px; padding: var(--spacing-md); }
-            .custom-input.lg { font-size: 18px; padding: var(--spacing-lg); }
-
-            /* Disabled State */
-            .custom-input:disabled {
-                background: var(--color-muted, #f3f3f3);
-                cursor: not-allowed;
-            }
-
-            /* Error State */
             .shadcn-input.error {
                 border-color: red;
             }
@@ -126,12 +109,6 @@ class CustomInput extends HTMLElement {
             .input-error {
                 color: var(--color-danger, red);
                 font-size: 12px;
-            }
-
-            .custom-input:focus {
-                border-color: #1e40af;
-                outline: none;
-                box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
             }
         `;
 
