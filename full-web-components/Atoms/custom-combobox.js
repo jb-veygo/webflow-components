@@ -7,16 +7,6 @@ class CustomCombobox extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         this.options = JSON.parse(this.getAttribute("options") || "[]");
-        let existingPopover = this.querySelector("custom-popover");
-        if (existingPopover) {
-            this.popover = existingPopover;
-        } else if (window.customElements.get("custom-popover")) {
-            this.popover = document.createElement("custom-popover");
-        } else {
-            this.popover = document.createElement("div");
-        }
-        this.popover.classList.add("combobox-popover");
-        this.shadowRoot.appendChild(this.popover);
         this.render();
     }
 
@@ -27,32 +17,25 @@ class CustomCombobox extends HTMLElement {
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
 
-        // Create Input Field (Trigger for Popover)
-        this.inputButton = document.createElement("button");
-        this.inputButton.classList.add("combobox-trigger");
-        this.inputButton.setAttribute("aria-haspopup", "true");
-        this.inputButton.setAttribute("aria-expanded", "false");
-        this.inputButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
-        
-        // Command Input (for filtering options)
-        this.commandInput = document.createElement("input");
-        this.commandInput.classList.add("command-input");
-        this.commandInput.setAttribute("type", "text");
-        this.commandInput.setAttribute("placeholder", "Search...");
-        this.commandInput.setAttribute("aria-label", "Search options");
-        
-        // Dropdown List
-        this.commandList = document.createElement("ul");
-        this.commandList.classList.add("command-list");
-        this.commandList.setAttribute("role", "listbox");
-        
-        // Populate List Items
-        this.updateList();
+        // Create Popover Component
+        this.popover = document.createElement("custom-popover");
+        this.popover.classList.add("combobox-popover");
+
+        // Create Command Component
+        this.command = document.createElement("custom-command");
+        this.command.classList.add("combobox-command");
+        this.command.setAttribute("options", JSON.stringify(this.options));
+
+        // Create Trigger Button
+        this.triggerButton = document.createElement("button");
+        this.triggerButton.classList.add("combobox-trigger");
+        this.triggerButton.setAttribute("aria-haspopup", "true");
+        this.triggerButton.setAttribute("aria-expanded", "false");
+        this.triggerButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
         
         // Append elements
-        this.popover.appendChild(this.inputButton);
-        this.popover.appendChild(this.commandInput);
-        this.popover.appendChild(this.commandList);
+        this.popover.appendChild(this.triggerButton);
+        this.popover.appendChild(this.command);
         this.wrapper.appendChild(this.popover);
         this.shadowRoot.appendChild(this.wrapper);
         
@@ -62,7 +45,6 @@ class CustomCombobox extends HTMLElement {
             .combobox-wrapper {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
                 width: 100%;
                 position: relative;
             }
@@ -83,87 +65,24 @@ class CustomCombobox extends HTMLElement {
                 border-color: #1e40af;
                 box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
             }
-
-            .command-input {
-                width: 100%;
-                padding: 0.5rem;
-                font-size: 0.875rem;
-                border-radius: 0.375rem;
-                border: 1px solid #e5e7eb;
-                outline: none;
-            }
-
-            .command-list {
-                list-style: none;
-                margin: 0;
-                padding: 0;
-                max-height: 200px;
-                overflow-y: auto;
-                background: white;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.5rem;
-                display: none;
-                position: absolute;
-                width: 100%;
-                z-index: 10;
-            }
-
-            .command-list.active {
-                display: block;
-            }
-
-            .command-list li {
-                padding: 0.5rem;
-                cursor: pointer;
-                transition: background 0.2s;
-            }
-
-            .command-list li:hover, .command-list li:focus {
-                background: #e0e7ff;
-            }
-
-            .command-list li:active {
-                background: #d1d5db;
-            }
         `;
         
         this.shadowRoot.appendChild(style);
         
         // Event Listeners
-        this.inputButton.addEventListener("click", () => {
-            this.commandList.classList.toggle("active");
-            const isOpen = this.commandList.classList.contains("active");
-            this.inputButton.setAttribute("aria-expanded", isOpen);
+        this.triggerButton.addEventListener("click", () => {
+            const isOpen = this.command.classList.contains("active");
+            this.command.classList.toggle("active");
+            this.triggerButton.setAttribute("aria-expanded", !isOpen);
         });
 
-        this.commandInput.addEventListener("input", () => {
-            this.updateList();
+        this.command.addEventListener("option-selected", (event) => {
+            this.triggerButton.querySelector(".placeholder").textContent = event.detail;
+            this.command.classList.remove("active");
+            this.triggerButton.setAttribute("aria-expanded", "false");
         });
-    }
-    
-    updateList() {
-        this.commandList.innerHTML = "";
-        const searchTerm = this.commandInput.value.toLowerCase();
-        
-        this.options.forEach(option => {
-            if (option.toLowerCase().includes(searchTerm)) {
-                const listItem = document.createElement("li");
-                listItem.textContent = option;
-                listItem.setAttribute("role", "option");
-                listItem.tabIndex = 0;
-                listItem.addEventListener("click", () => {
-                    this.inputButton.querySelector(".placeholder").textContent = option;
-                    this.inputButton.setAttribute("aria-expanded", "false");
-                    this.commandList.classList.remove("active");
-                    this.dispatchEvent(new CustomEvent("change", {
-                        detail: option,
-                        bubbles: true,
-                        composed: true
-                    }));
-                });
-                this.commandList.appendChild(listItem);
-            }
-        });
+
+        console.log("CustomCombobox component loaded successfully.");
     }
 }
 
