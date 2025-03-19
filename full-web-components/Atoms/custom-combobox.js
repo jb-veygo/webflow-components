@@ -6,26 +6,32 @@ class CustomCombobox extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
+        console.log("Initializing CustomCombobox component...");
         this.options = JSON.parse(this.getAttribute("options") || "[]");
+        console.log("Parsed options:", this.options);
         this.render();
     }
 
     render() {
         this.shadowRoot.innerHTML = '';
 
+        console.log("Creating wrapper div...");
         // Create Wrapper
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
 
+        console.log("Creating popover component...");
         // Create Popover Component
         this.popover = document.createElement("custom-popover");
         this.popover.classList.add("combobox-popover");
 
+        console.log("Creating command component with options:", this.options);
         // Create Command Component
         this.command = document.createElement("custom-command");
         this.command.classList.add("combobox-command");
         this.command.setAttribute("options", JSON.stringify(this.options));
 
+        console.log("Creating trigger button...");
         // Create Trigger Button
         this.triggerButton = document.createElement("button");
         this.triggerButton.classList.add("combobox-trigger");
@@ -33,12 +39,14 @@ class CustomCombobox extends HTMLElement {
         this.triggerButton.setAttribute("aria-expanded", "false");
         this.triggerButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
         
+        console.log("Appending elements to popover and wrapper...");
         // Append elements
         this.popover.appendChild(this.triggerButton);
         this.popover.appendChild(this.command);
         this.wrapper.appendChild(this.popover);
         this.shadowRoot.appendChild(this.wrapper);
         
+        console.log("Applying styles...");
         // Styles
         const style = document.createElement("style");
         style.textContent = `
@@ -69,6 +77,7 @@ class CustomCombobox extends HTMLElement {
         
         this.shadowRoot.appendChild(style);
         
+        console.log("Attaching event listeners...");
         // Event Listeners
         this.triggerButton.addEventListener("click", () => {
             const isOpen = this.command.classList.contains("active");
@@ -77,6 +86,7 @@ class CustomCombobox extends HTMLElement {
         });
 
         this.command.addEventListener("option-selected", (event) => {
+            console.log("Handling option selection event...");
             this.triggerButton.querySelector(".placeholder").textContent = event.detail;
             this.command.classList.remove("active");
             this.triggerButton.setAttribute("aria-expanded", "false");
