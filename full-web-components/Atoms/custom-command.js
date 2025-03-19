@@ -2,6 +2,7 @@ class CustomCommand extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
+        this.options = JSON.parse(this.getAttribute("options") || "[]");
         this.render();
     }
 
@@ -18,11 +19,11 @@ class CustomCommand extends HTMLElement {
         this.commandInput.setAttribute("placeholder", "Type a command...");
         this.commandInput.setAttribute("aria-label", "Command input");
 
-        // Command List
+        // Command List (Generated from Options)
         this.commandList = document.createElement("ul");
         this.commandList.classList.add("command-list");
         this.commandList.setAttribute("role", "listbox");
-        this.commandList.innerHTML = `<slot></slot>`;
+        this.updateList();
 
         // Append elements
         this.commandWrapper.appendChild(this.commandInput);
@@ -95,6 +96,32 @@ class CustomCommand extends HTMLElement {
 
         this.commandInput.addEventListener("blur", () => {
             setTimeout(() => this.commandList.classList.remove("active"), 200);
+        });
+        
+        this.commandInput.addEventListener("input", () => {
+            this.updateList();
+        });
+    }
+
+    updateList() {
+        this.commandList.innerHTML = "";
+        const searchTerm = this.commandInput.value.toLowerCase();
+        
+        this.options.forEach(option => {
+            if (option.toLowerCase().includes(searchTerm)) {
+                const listItem = document.createElement("li");
+                listItem.textContent = option;
+                listItem.setAttribute("role", "option");
+                listItem.tabIndex = 0;
+                listItem.addEventListener("click", () => {
+                    this.dispatchEvent(new CustomEvent("option-selected", {
+                        detail: option,
+                        bubbles: true,
+                        composed: true
+                    }));
+                });
+                this.commandList.appendChild(listItem);
+            }
         });
     }
 }

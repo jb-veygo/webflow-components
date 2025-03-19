@@ -8,6 +8,7 @@ class CustomCombobox extends HTMLElement {
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
         this.attachShadow({ mode: "open" });
+        this.options = JSON.parse(this.getAttribute("options") || "[]");
         this.render();
     }
 
@@ -26,6 +27,7 @@ class CustomCombobox extends HTMLElement {
         // Create Command Component
         this.command = document.createElement("custom-command");
         this.command.classList.add("combobox-command");
+        this.command.setAttribute("options", JSON.stringify(this.options));
 
         // Create Input Button (Trigger for Popover)
         this.inputButton = document.createElement("button");
@@ -134,6 +136,11 @@ class CustomCombobox extends HTMLElement {
 
         this.commandInput.addEventListener("blur", () => {
             setTimeout(() => this.commandList.classList.remove("active"), 200);
+        });
+
+        this.command.addEventListener("option-selected", (event) => {
+            this.inputButton.querySelector(".placeholder").textContent = event.detail;
+            this.inputButton.setAttribute("aria-expanded", "false");
         });
     }
 }
