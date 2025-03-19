@@ -18,7 +18,7 @@ class CustomInput extends HTMLElement {
 
         // Input Container (For Icons)
         this.inputContainer = document.createElement("div");
-        this.inputContainer.classList.add("input-container");
+        this.inputContainer.classList.add("input-container", "shadcn-input");
 
         // Leading Icon Slot
         this.leadingIcon = document.createElement("span");
@@ -65,14 +65,16 @@ class CustomInput extends HTMLElement {
                 font-weight: 600;
             }
 
-            .input-container {
+            .shadcn-input {
                 display: flex;
                 align-items: center;
-                border: 1px solid var(--color-border, #ddd);
-                border-radius: var(--border-radius-md);
-                padding: var(--spacing-sm);
-                transition: border-color 0.2s ease-in-out;
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 0.875rem;
+                border-radius: 0.5rem;
+                border: 1px solid #e5e7eb;
                 background: white;
+                transition: border-color 0.2s ease-in-out;
             }
 
             .custom-input {
@@ -88,6 +90,16 @@ class CustomInput extends HTMLElement {
                 display: flex;
                 align-items: center;
                 padding: 0 var(--spacing-xs);
+            }
+
+            .shadcn-input:focus-within {
+                border-color: #1e40af;
+                box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+            }
+
+            .shadcn-input:disabled {
+                background: #f3f4f6;
+                cursor: not-allowed;
             }
 
             /* Variants */
@@ -116,8 +128,8 @@ class CustomInput extends HTMLElement {
             }
 
             /* Error State */
-            .input-container.error {
-                border-color: var(--color-danger, red);
+            .shadcn-input.error {
+                border-color: red;
             }
 
             .input-error {
@@ -143,6 +155,9 @@ class CustomInput extends HTMLElement {
     updateAttributes() {
         this.input.setAttribute("type", this.getAttribute("type") || "text");
         this.input.setAttribute("placeholder", this.getAttribute("placeholder") || "");
+        this.input.setAttribute("autocomplete", "off");
+        this.input.setAttribute("autocorrect", "off");
+        this.input.setAttribute("spellcheck", "false");
         this.inputContainer.className = `input-container ${this.getAttribute("variant") || "default"} ${this.getAttribute("size") || "md"}`;
         this.input.disabled = this.hasAttribute("disabled");
         this.input.setAttribute("role", "textbox");
