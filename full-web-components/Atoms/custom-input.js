@@ -7,7 +7,7 @@ class CustomInput extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
 
-        // Wrapper for input
+        // Wrapper
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("input-wrapper");
 
@@ -16,9 +16,23 @@ class CustomInput extends HTMLElement {
         this.label.classList.add("input-label");
         this.label.innerHTML = `<slot name="label"></slot>`;
 
+        // Input Container (For Icons)
+        this.inputContainer = document.createElement("div");
+        this.inputContainer.classList.add("input-container");
+
+        // Leading Icon Slot
+        this.leadingIcon = document.createElement("span");
+        this.leadingIcon.classList.add("leading-icon");
+        this.leadingIcon.innerHTML = `<slot name="leading-icon"></slot>`;
+
         // Input Field
         this.input = document.createElement("input");
         this.input.classList.add("custom-input");
+
+        // Trailing Icon Slot
+        this.trailingIcon = document.createElement("span");
+        this.trailingIcon.classList.add("trailing-icon");
+        this.trailingIcon.innerHTML = `<slot name="trailing-icon"></slot>`;
 
         // Error Message
         this.errorMessage = document.createElement("span");
@@ -26,11 +40,13 @@ class CustomInput extends HTMLElement {
         this.errorMessage.style.display = "none";
 
         // Append elements
+        this.inputContainer.appendChild(this.leadingIcon);
+        this.inputContainer.appendChild(this.input);
+        this.inputContainer.appendChild(this.trailingIcon);
         this.wrapper.appendChild(this.label);
-        this.wrapper.appendChild(this.input);
+        this.wrapper.appendChild(this.inputContainer);
         this.wrapper.appendChild(this.errorMessage);
 
-        // Apply Attributes & Styling
         this.updateAttributes();
 
         // Styles
@@ -49,34 +65,49 @@ class CustomInput extends HTMLElement {
                 font-weight: 600;
             }
 
-            .custom-input {
-                width: 100%;
-                padding: var(--spacing-md);
-                border-radius: var(--border-radius-md);
-                font-size: var(--font-body);
+            .input-container {
+                display: flex;
+                align-items: center;
                 border: 1px solid var(--color-border, #ddd);
+                border-radius: var(--border-radius-md);
+                padding: var(--spacing-sm);
                 transition: border-color 0.2s ease-in-out;
+                background: white;
+            }
+
+            .custom-input {
+                flex-grow: 1;
+                border: none;
+                outline: none;
+                font-size: var(--font-body, 16px);
+                padding: var(--spacing-xs);
+                background: transparent;
+            }
+
+            .leading-icon, .trailing-icon {
+                display: flex;
+                align-items: center;
+                padding: 0 var(--spacing-xs);
             }
 
             /* Variants */
-            .custom-input.outline {
+            .input-container.outline {
                 border: 2px solid var(--color-primary);
             }
 
-            .custom-input.ghost {
+            .input-container.ghost {
                 border: none;
                 background: transparent;
             }
 
-            .custom-input:focus {
+            .input-container:focus-within {
                 border-color: var(--color-primary-dark);
-                outline: none;
             }
 
             /* Sizes */
-            .custom-input.sm { padding: var(--spacing-xs); font-size: 14px; }
-            .custom-input.md { padding: var(--spacing-md); font-size: 16px; }
-            .custom-input.lg { padding: var(--spacing-lg); font-size: 18px; }
+            .custom-input.sm { font-size: 14px; padding: var(--spacing-xs); }
+            .custom-input.md { font-size: 16px; padding: var(--spacing-md); }
+            .custom-input.lg { font-size: 18px; padding: var(--spacing-lg); }
 
             /* Disabled State */
             .custom-input:disabled {
@@ -85,6 +116,10 @@ class CustomInput extends HTMLElement {
             }
 
             /* Error State */
+            .input-container.error {
+                border-color: var(--color-danger, red);
+            }
+
             .input-error {
                 color: var(--color-danger, red);
                 font-size: 12px;
@@ -102,14 +137,16 @@ class CustomInput extends HTMLElement {
     updateAttributes() {
         this.input.setAttribute("type", this.getAttribute("type") || "text");
         this.input.setAttribute("placeholder", this.getAttribute("placeholder") || "");
-        this.input.className = `custom-input ${this.getAttribute("variant") || "default"} ${this.getAttribute("size") || "md"}`;
+        this.inputContainer.className = `input-container ${this.getAttribute("variant") || "default"} ${this.getAttribute("size") || "md"}`;
         this.input.disabled = this.hasAttribute("disabled");
 
         if (this.hasAttribute("error")) {
             this.errorMessage.textContent = this.getAttribute("error");
             this.errorMessage.style.display = "block";
+            this.inputContainer.classList.add("error");
         } else {
             this.errorMessage.style.display = "none";
+            this.inputContainer.classList.remove("error");
         }
     }
 }
