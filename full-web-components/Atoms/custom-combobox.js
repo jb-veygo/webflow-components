@@ -27,13 +27,17 @@ class CustomCombobox extends HTMLElement {
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
 
-        console.log("Creating popover component...");
-        // Create Popover Component
-        this.popover = this.querySelector("custom-popover") || document.createElement("custom-popover");
+        console.log("Querying for existing popover component...");
+        this.popover = this.querySelector("custom-popover");
+        if (!this.popover) {
+            console.log("No existing popover found, creating a new one...");
+            this.popover = document.createElement("custom-popover");
+        }
         if (!(this.popover instanceof HTMLElement)) {
-            console.error("Popover component is not properly initialized.");
+            console.error("Popover component is not properly initialized.", this.popover);
             return;
         }
+        this.popover.removeAttribute("popover"); // Ensure popover attribute isn't set incorrectly
         this.popover.classList.add("combobox-popover");
 
         console.log("Creating command component with options:", this.options);
