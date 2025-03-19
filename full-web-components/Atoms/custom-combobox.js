@@ -18,7 +18,7 @@ class CustomCombobox extends HTMLElement {
         this.wrapper.classList.add("combobox-wrapper");
 
         // Create Popover Component
-        this.popover = document.createElement("div");
+        this.popover = document.createElement("custom-popover");
         this.popover.classList.add("combobox-popover");
 
         // Create Input Field (Trigger for Popover)
