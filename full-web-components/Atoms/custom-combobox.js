@@ -1,12 +1,10 @@
 class CustomCombobox extends HTMLElement {
     static get observedAttributes() {
-        return ["placeholder", "variant", "size", "disabled", "options"];
+        return ["placeholder", "options"];
     }
 
     constructor() {
         super();
-        this.wrapper = document.createElement("div");
-        this.wrapper.classList.add("combobox-wrapper");
         this.attachShadow({ mode: "open" });
         this.options = JSON.parse(this.getAttribute("options") || "[]");
         this.render();
@@ -15,55 +13,50 @@ class CustomCombobox extends HTMLElement {
     render() {
         this.shadowRoot.innerHTML = '';
 
+        // Create Wrapper
+        this.wrapper = document.createElement("div");
+        this.wrapper.classList.add("combobox-wrapper");
+
         // Create Popover Component
-        if (!this.popover || !(this.popover instanceof HTMLElement)) {
-            this.popover = document.createElement("custom-popover");
-        }
+        this.popover = document.createElement("div");
         this.popover.classList.add("combobox-popover");
-        this.shadowRoot.appendChild(this.popover);
 
-        // Create Command Component
-        if (!this.command || !(this.command instanceof HTMLElement)) {
-            this.command = document.createElement("custom-command");
-        }
-        this.command.classList.add("combobox-command");
-        this.command.setAttribute("options", JSON.stringify(this.options));
-        this.shadowRoot.appendChild(this.command);
-
-        // Create Input Button (Trigger for Popover)
+        // Create Input Field (Trigger for Popover)
         this.inputButton = document.createElement("button");
         this.inputButton.classList.add("combobox-trigger");
         this.inputButton.setAttribute("aria-haspopup", "true");
         this.inputButton.setAttribute("aria-expanded", "false");
         this.inputButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
-
+        
         // Command Input (for filtering options)
         this.commandInput = document.createElement("input");
         this.commandInput.classList.add("command-input");
         this.commandInput.setAttribute("type", "text");
         this.commandInput.setAttribute("placeholder", "Search...");
         this.commandInput.setAttribute("aria-label", "Search options");
-
-        // Dropdown List (inside Command component)
+        
+        // Dropdown List
         this.commandList = document.createElement("ul");
         this.commandList.classList.add("command-list");
         this.commandList.setAttribute("role", "listbox");
-
+        
+        // Populate List Items
+        this.updateList();
+        
         // Append elements
-        this.command.appendChild(this.commandInput);
-        this.command.appendChild(this.commandList);
         this.popover.appendChild(this.inputButton);
-        this.popover.appendChild(this.command);
+        this.popover.appendChild(this.commandInput);
+        this.popover.appendChild(this.commandList);
         this.wrapper.appendChild(this.popover);
         this.shadowRoot.appendChild(this.wrapper);
-
+        
         // Styles
         const style = document.createElement("style");
         style.textContent = `
             .combobox-wrapper {
                 display: flex;
                 flex-direction: column;
-                gap: var(--spacing-xs);
+                gap: 8px;
                 width: 100%;
                 position: relative;
             }
@@ -100,7 +93,13 @@ class CustomCombobox extends HTMLElement {
                 padding: 0;
                 max-height: 200px;
                 overflow-y: auto;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
                 display: none;
+                position: absolute;
+                width: 100%;
+                z-index: 10;
             }
 
             .command-list.active {
@@ -123,25 +122,41 @@ class CustomCombobox extends HTMLElement {
         `;
         
         this.shadowRoot.appendChild(style);
-
+        
         // Event Listeners
         this.inputButton.addEventListener("click", () => {
-            const isOpen = this.commandList.classList.contains("active");
             this.commandList.classList.toggle("active");
-            this.inputButton.setAttribute("aria-expanded", !isOpen);
+            const isOpen = this.commandList.classList.contains("active");
+            this.inputButton.setAttribute("aria-expanded", isOpen);
         });
 
-        this.commandInput.addEventListener("focus", () => {
-            this.commandList.classList.add("active");
+        this.commandInput.addEventListener("input", () => {
+            this.updateList();
         });
-
-        this.commandInput.addEventListener("blur", () => {
-            setTimeout(() => this.commandList.classList.remove("active"), 200);
-        });
-
-        this.command.addEventListener("option-selected", (event) => {
-            this.inputButton.querySelector(".placeholder").textContent = event.detail;
-            this.inputButton.setAttribute("aria-expanded", "false");
+    }
+    
+    updateList() {
+        this.commandList.innerHTML = "";
+        const searchTerm = this.commandInput.value.toLowerCase();
+        
+        this.options.forEach(option => {
+            if (option.toLowerCase().includes(searchTerm)) {
+                const listItem = document.createElement("li");
+                listItem.textContent = option;
+                listItem.setAttribute("role", "option");
+                listItem.tabIndex = 0;
+                listItem.addEventListener("click", () => {
+                    this.inputButton.querySelector(".placeholder").textContent = option;
+                    this.inputButton.setAttribute("aria-expanded", "false");
+                    this.commandList.classList.remove("active");
+                    this.dispatchEvent(new CustomEvent("change", {
+                        detail: option,
+                        bubbles: true,
+                        composed: true
+                    }));
+                });
+                this.commandList.appendChild(listItem);
+            }
         });
     }
 }
