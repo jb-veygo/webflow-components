@@ -31,6 +31,7 @@ class CustomCombobox extends HTMLElement {
                     <button class="combobox-trigger" aria-haspopup="true" aria-expanded="false">
                         <span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>
                     </button>
+                    <input type="text" class="combobox-search" placeholder="Search..." aria-label="Search options">
                     <custom-command class="combobox-command"></custom-command>
                 </custom-popover>
             </div>
@@ -64,6 +65,7 @@ class CustomCombobox extends HTMLElement {
         this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
         this.popover = this.shadowRoot.querySelector("custom-popover");
         this.command = this.shadowRoot.querySelector("custom-command");
+        this.searchInput = this.shadowRoot.querySelector(".combobox-search");
         
         // Ensure the popover attribute is not incorrectly set
         if (this.hasAttribute("popover")) {
@@ -98,6 +100,12 @@ class CustomCombobox extends HTMLElement {
                 bubbles: true,
                 composed: true
             }));
+        });
+
+        this.searchInput.addEventListener("input", () => {
+            const searchTerm = this.searchInput.value.toLowerCase();
+            const filteredOptions = this.options.filter(option => option.toLowerCase().includes(searchTerm));
+            this.command.setAttribute("options", JSON.stringify(filteredOptions));
         });
 
         console.log("CustomCombobox component loaded successfully.");
