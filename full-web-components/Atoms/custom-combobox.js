@@ -56,18 +56,29 @@ class CustomCombobox extends HTMLElement {
             </style>
         `;
         
+        this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
         this.popover = this.shadowRoot.querySelector("custom-popover");
         this.command = this.shadowRoot.querySelector("custom-command");
-        this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
         
+        // Ensure the popover attribute is not incorrectly set
+        if (this.hasAttribute("popover")) {
+            console.warn("Removing invalid popover attribute from custom-combobox");
+            this.removeAttribute("popover");
+        }
+
         this.command.setAttribute("options", JSON.stringify(this.options));
+        this.triggerButton.popoverTargetElement = this.popover;
 
         console.log("Attaching event listeners...");
         // Event Listeners
         this.triggerButton.addEventListener("click", () => {
-            const isOpen = this.command.classList.contains("active");
-            this.command.classList.toggle("active");
-            this.triggerButton.setAttribute("aria-expanded", !isOpen);
+            if (this.popover) {
+                if (this.popover.hasAttribute("open")) {
+                    this.popover.removeAttribute("open");
+                } else {
+                    this.popover.setAttribute("open", "true");
+                }
+            }
         });
 
         this.command.addEventListener("option-selected", (event) => {
@@ -75,6 +86,13 @@ class CustomCombobox extends HTMLElement {
             this.triggerButton.querySelector(".placeholder").textContent = event.detail;
             this.command.classList.remove("active");
             this.triggerButton.setAttribute("aria-expanded", "false");
+            
+            // Dispatch change event
+            this.dispatchEvent(new CustomEvent("change", {
+                detail: event.detail,
+                bubbles: true,
+                composed: true
+            }));
         });
 
         console.log("CustomCombobox component loaded successfully.");
