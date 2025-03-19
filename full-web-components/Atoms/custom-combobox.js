@@ -135,8 +135,10 @@ class CustomCombobox extends HTMLElement {
             </style>
         `;
         
-        this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
-        this.popover = this.shadowRoot.querySelector("custom-popover");
+        this.popover = this.shadowRoot.querySelector(".combobox-popover");
+        this.popover.setAttribute("popover", "manual"); // Ensuring popover behavior is set correctly
+
+        this.triggerButton = this.shadowRoot.querySelector(".Polaris-TextField"); // Ensure correct reference
         this.command = this.shadowRoot.querySelector("custom-command");
         this.searchInput = this.shadowRoot.querySelector(".combobox-search");
         
@@ -157,12 +159,10 @@ class CustomCombobox extends HTMLElement {
         console.log("Attaching event listeners...");
         // Event Listeners
         this.triggerButton.addEventListener("click", () => {
-            if (this.popover) {
-                if (this.popover.hasAttribute("open")) {
-                    this.popover.removeAttribute("open");
-                } else {
-                    this.popover.setAttribute("open", "true");
-                }
+            if (this.popover.hasAttribute("open")) {
+                this.popover.removeAttribute("open");
+            } else {
+                this.popover.setAttribute("open", "true");
             }
         });
 
