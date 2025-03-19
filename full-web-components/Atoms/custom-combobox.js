@@ -20,9 +20,20 @@ class CustomCombobox extends HTMLElement {
         this.listbox = this.shadowRoot.querySelector(".combobox-list");
         this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
         
+        // Ensure options are set from attribute
+        this.options = JSON.parse(this.getAttribute("options") || "[]");
+        this.render();
+
         this.searchInput.addEventListener("input", this.filterOptions.bind(this));
         this.searchInput.addEventListener("keydown", this.handleKeyboardNavigation.bind(this));
         this.triggerButton.addEventListener("click", this.toggleDropdown.bind(this));
+        
+        // Ensure the popover attribute is not incorrectly set
+        if (this.hasAttribute("popover")) {
+            console.warn("Removing invalid popover attribute from custom-combobox");
+            this.removeAttribute("popover");
+        }
+        this.popover.setAttribute("popover", "manual"); // Ensure popover behavior is set correctly
     }
 
     filterOptions() {
