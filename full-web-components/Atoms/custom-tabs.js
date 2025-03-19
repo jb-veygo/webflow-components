@@ -42,24 +42,37 @@ class CustomTabs extends HTMLElement {
             <style>
                 .tabs-container {
                     display: flex;
+                    gap: 4px;
                     border-bottom: 2px solid #e5e7eb;
                 }
                 .tab-button {
-                    flex: 1;
-                    padding: 10px 16px;
+                    flex: none;
+                    padding: 8px 16px;
                     background: transparent;
                     border: none;
                     cursor: pointer;
                     font-weight: 500;
-                    transition: color 0.2s;
+                    transition: all 0.2s;
+                    color: #374151;
+                    border-radius: 4px;
+                    font-size: 14px;
                 }
                 .tab-button.active {
-                    color: #1e40af;
+                    color: #111827;
+                    background-color: #e5e7eb;
                     border-bottom: 2px solid #1e40af;
+                }
+                .tab-button:hover {
+                    background-color: #f3f4f6;
                 }
                 .tab-content {
                     display: none;
                     padding: 16px;
+                    background: white;
+                    border-radius: 4px;
+                }
+                .tab-content.active {
+                    display: block;
                 }
             </style>
             <div class="tabs-container">
@@ -71,7 +84,7 @@ class CustomTabs extends HTMLElement {
             </div>
             <div class="tab-contents">
                 ${this.tabs.map(tab => `
-                    <div class="tab-content" data-tab="${tab.id}" style="display: ${tab.id === this.activeTab ? 'block' : 'none'}">
+                    <div class="tab-content ${tab.id === this.activeTab ? 'active' : ''}" data-tab="${tab.id}">
                         ${tab.content}
                     </div>
                 `).join("")}
