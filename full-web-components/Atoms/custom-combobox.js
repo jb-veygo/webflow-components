@@ -7,7 +7,7 @@ class CustomCombobox extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         console.log("Initializing CustomCombobox component...");
-        console.log("Waiting for required components to load...");
+
         Promise.all([
             customElements.whenDefined("custom-popover"),
             customElements.whenDefined("custom-command")
@@ -21,46 +21,34 @@ class CustomCombobox extends HTMLElement {
 
     render() {
         this.shadowRoot.innerHTML = '';
+        console.log("Creating combobox structure...");
 
-        console.log("Creating wrapper div...");
         // Create Wrapper
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
 
-        console.log("Querying for existing popover component...");
-        this.popover = this.querySelector("custom-popover");
-        if (!this.popover) {
-            console.log("No existing popover found, creating a new one...");
-            this.popover = document.createElement("custom-popover");
-        }
-        if (!(this.popover instanceof HTMLElement)) {
-            console.error("Popover component is not properly initialized.", this.popover);
-            return;
-        }
-        this.popover.removeAttribute("popover"); // Ensure popover attribute isn't set incorrectly
+        // Reference Existing Popover Component
+        this.popover = document.createElement("custom-popover");
         this.popover.classList.add("combobox-popover");
 
-        console.log("Creating command component with options:", this.options);
-        // Create Command Component
+        // Reference Existing Command Component
         this.command = document.createElement("custom-command");
         this.command.classList.add("combobox-command");
         this.command.setAttribute("options", JSON.stringify(this.options));
 
-        console.log("Creating trigger button...");
         // Create Trigger Button
         this.triggerButton = document.createElement("button");
         this.triggerButton.classList.add("combobox-trigger");
         this.triggerButton.setAttribute("aria-haspopup", "true");
         this.triggerButton.setAttribute("aria-expanded", "false");
         this.triggerButton.innerHTML = `<span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>`;
-        
-        console.log("Appending elements to popover and wrapper...");
-        // Append elements
+
+        // Append elements to the popover
         this.popover.appendChild(this.triggerButton);
         this.popover.appendChild(this.command);
         this.wrapper.appendChild(this.popover);
         this.shadowRoot.appendChild(this.wrapper);
-        
+
         console.log("Applying styles...");
         // Styles
         const style = document.createElement("style");
@@ -89,9 +77,8 @@ class CustomCombobox extends HTMLElement {
                 box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
             }
         `;
-        
         this.shadowRoot.appendChild(style);
-        
+
         console.log("Attaching event listeners...");
         // Event Listeners
         this.triggerButton.addEventListener("click", () => {
