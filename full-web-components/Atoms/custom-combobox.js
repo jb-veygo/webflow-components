@@ -20,6 +20,7 @@ class CustomCombobox extends HTMLElement {
             this.popover = document.createElement("custom-popover");
         }
         this.popover.classList.add("combobox-popover");
+        this.shadowRoot.appendChild(this.popover);
 
         // Create Command Component
         if (!this.command || !(this.command instanceof HTMLElement)) {
@@ -27,6 +28,7 @@ class CustomCombobox extends HTMLElement {
         }
         this.command.classList.add("combobox-command");
         this.command.setAttribute("options", JSON.stringify(this.options));
+        this.shadowRoot.appendChild(this.command);
 
         // Create Input Button (Trigger for Popover)
         this.inputButton = document.createElement("button");
