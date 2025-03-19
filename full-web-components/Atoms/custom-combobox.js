@@ -34,10 +34,13 @@ class CustomCombobox extends HTMLElement {
         this.input.setAttribute("aria-haspopup", "listbox");
         this.input.setAttribute("aria-expanded", "false");
         this.input.setAttribute("aria-autocomplete", "list");
+        this.input.setAttribute("aria-controls", "combobox-dropdown");
 
         // Dropdown List
         this.dropdown = document.createElement("ul");
         this.dropdown.classList.add("combobox-dropdown");
+        this.dropdown.setAttribute("role", "listbox");
+        this.dropdown.setAttribute("id", "combobox-dropdown");
         this.dropdown.style.display = "none";
 
         // Trailing Icon Slot
@@ -72,7 +75,7 @@ class CustomCombobox extends HTMLElement {
                 font-weight: 600;
             }
 
-            .combobox-container {
+            .shadcn-combobox {
                 display: flex;
                 align-items: center;
                 border: 1px solid #e5e7eb;
@@ -80,6 +83,7 @@ class CustomCombobox extends HTMLElement {
                 padding: 0.75rem;
                 background: white;
                 cursor: pointer;
+                transition: border-color 0.2s ease-in-out;
             }
 
             .custom-input {
@@ -97,6 +101,11 @@ class CustomCombobox extends HTMLElement {
                 padding: 0 var(--spacing-xs);
             }
 
+            .shadcn-combobox:focus-within {
+                border-color: #1e40af;
+                box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+            }
+
             .combobox-dropdown {
                 position: absolute;
                 top: 100%;
@@ -109,6 +118,7 @@ class CustomCombobox extends HTMLElement {
                 padding: 0.5rem 0;
                 max-height: 250px;
                 overflow-y: auto;
+                z-index: 1000;
             }
 
             .combobox-dropdown li {
@@ -116,6 +126,7 @@ class CustomCombobox extends HTMLElement {
                 cursor: pointer;
                 transition: background 0.2s;
                 font-size: 14px;
+                list-style: none;
             }
 
             .combobox-dropdown li:hover, .combobox-dropdown li:focus {

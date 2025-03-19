@@ -1,6 +1,6 @@
 class CustomLabel extends HTMLElement {
     static get observedAttributes() {
-        return ["for", "variant", "help", "hidden"];
+        return ["for"];
     }
 
     constructor() {
@@ -13,8 +13,6 @@ class CustomLabel extends HTMLElement {
         this.label = document.createElement("label");
         this.label.classList.add("custom-label");
         this.label.innerHTML = `<slot></slot>`;
-        this.label.setAttribute("role", "label");
-        this.label.setAttribute("aria-hidden", this.hasAttribute("hidden") ? "true" : "false");
 
         this.helpText = document.createElement("span");
         this.helpText.classList.add("help-text");
@@ -22,46 +20,21 @@ class CustomLabel extends HTMLElement {
 
         this.updateAttributes();
 
+        // Updated ShadCN UI label styles
         const style = document.createElement("style");
         style.textContent = `
-            .label-wrapper {
-                display: flex;
-                flex-direction: column;
-                gap: var(--spacing-xs);
-            }
-
             .custom-label {
-                font-size: 14px;
-                color: #333;
-                font-weight: 500;
                 display: inline-block;
-            }
-
-            /* Variants */
-            .custom-label.bold {
-                font-weight: bold;
-            }
-
-            .custom-label.muted {
-                color: #666;
-            }
-
-            .custom-label.required::after {
-                content: " *";
-                color: red;
-            }
-
-            /* Help Text */
-            .help-text {
-                font-size: 12px;
-                color: #666;
+                font-size: 0.875rem; /* 14px */
+                font-weight: 500;
+                color: #374151; /* Slate Gray */
+                user-select: none;
             }
         `;
 
-        this.wrapper.appendChild(this.label);
-        this.wrapper.appendChild(this.helpText);
         this.shadowRoot.appendChild(style);
-        this.shadowRoot.appendChild(this.wrapper);
+        this.shadowRoot.appendChild(this.label);
+        this.shadowRoot.appendChild(this.helpText);
     }
 
     attributeChangedCallback() {
@@ -69,13 +42,15 @@ class CustomLabel extends HTMLElement {
     }
 
     updateAttributes() {
-        const forAttr = this.getAttribute("for") || "";
-        const variant = this.getAttribute("variant") || "default";
-        const helpText = this.getAttribute("help") || "";
-
+        const forAttr = this.getAttribute("for");
         if (forAttr) {
             this.label.setAttribute("for", forAttr);
+        } else {
+            this.label.removeAttribute("for");
         }
+        
+        const variant = this.getAttribute("variant") || "default";
+        const helpText = this.getAttribute("help") || "";
 
         this.label.className = `custom-label ${variant}`;
         this.label.setAttribute("aria-hidden", this.hasAttribute("hidden") ? "true" : "false");
