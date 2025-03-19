@@ -34,10 +34,10 @@ class CustomCard extends HTMLElement {
         const style = document.createElement("style");
         style.textContent = `
             .custom-card {
-                background: var(--color-background, white);
-                padding: var(--spacing-lg);
-                border-radius: var(--border-radius-md);
-                border: 1px solid var(--color-border, #ddd);
+                background: white;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #e5e7eb;
                 transition: all 0.3s ease-in-out;
             }
 
@@ -46,22 +46,23 @@ class CustomCard extends HTMLElement {
             }
 
             .custom-card.bordered {
-                border: 2px solid var(--color-primary);
+                border: 2px solid #1e40af;
             }
 
             .card-header {
-                font-size: var(--font-heading, 18px);
-                font-weight: bold;
-                margin-bottom: var(--spacing-md);
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+                color: #1e293b;
             }
 
             .card-body {
-                font-size: var(--font-body, 16px);
-                color: var(--color-text, #333);
+                font-size: 1rem;
+                color: #374151;
             }
 
             .card-footer {
-                margin-top: var(--spacing-md);
+                margin-top: 1rem;
                 text-align: right;
             }
         `;

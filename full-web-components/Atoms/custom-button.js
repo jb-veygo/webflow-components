@@ -1,6 +1,6 @@
 class CustomButton extends HTMLElement {
     static get observedAttributes() {
-        return ["variant", "size", "disabled"];
+        return ["variant", "size", "disabled", "loading", "success"];
     }
 
     constructor() {
@@ -10,8 +10,15 @@ class CustomButton extends HTMLElement {
         this.button = document.createElement("button");
         this.button.classList.add("custom-button", "default");
 
-        // Slot allows text & icons inside the button
-        this.button.innerHTML = `<slot></slot>`;
+        // Check for loading state
+        if (this.hasAttribute("loading")) {
+            this.button.innerHTML = `<span class="spinner"></span> Loading...`;
+        } else if (this.hasAttribute("success")) {
+            this.button.innerHTML = `✔ Success`;
+            this.button.classList.add("success");
+        } else {
+            this.button.innerHTML = `<slot></slot>`;
+        }
 
         this.updateAttributes();
 
@@ -23,7 +30,8 @@ class CustomButton extends HTMLElement {
             }
 
             .custom-button {
-                display: inline-flex;
+                display: flex;
+                width: 100%;
                 align-items: center;
                 justify-content: center;
                 padding: 0.5rem 1rem;
@@ -48,9 +56,9 @@ class CustomButton extends HTMLElement {
                 background: #1e3a8a;
             }
 
-            .custom-button.default:active {
-                background: #1e3a8a;
+            .custom-button:active {
                 transform: scale(0.98);
+                filter: brightness(0.9);
             }
 
             /* Outline Button */
@@ -126,6 +134,33 @@ class CustomButton extends HTMLElement {
                 opacity: 0.5;
                 cursor: not-allowed;
                 pointer-events: none;
+            }
+
+            .custom-button.loading {
+                cursor: wait;
+                pointer-events: none;
+                background: #a3a3a3;
+                color: white;
+            }
+
+            .custom-button.success {
+                background: #0f766e;
+                color: white;
+            }
+
+            .spinner {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid white;
+                border-top-color: transparent;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
             }
         `;
 

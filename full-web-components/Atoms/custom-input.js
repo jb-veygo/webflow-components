@@ -1,6 +1,6 @@
 class CustomInput extends HTMLElement {
     static get observedAttributes() {
-        return ["type", "placeholder", "variant", "size", "disabled", "error"];
+        return ["type", "placeholder", "variant", "size", "disabled", "error", "value"];
     }
 
     constructor() {
@@ -124,6 +124,12 @@ class CustomInput extends HTMLElement {
                 color: var(--color-danger, red);
                 font-size: 12px;
             }
+
+            .custom-input:focus {
+                border-color: #1e40af;
+                outline: none;
+                box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+            }
         `;
 
         this.shadowRoot.appendChild(style);
@@ -139,11 +145,17 @@ class CustomInput extends HTMLElement {
         this.input.setAttribute("placeholder", this.getAttribute("placeholder") || "");
         this.inputContainer.className = `input-container ${this.getAttribute("variant") || "default"} ${this.getAttribute("size") || "md"}`;
         this.input.disabled = this.hasAttribute("disabled");
+        this.input.setAttribute("role", "textbox");
+        this.input.setAttribute("aria-disabled", this.hasAttribute("disabled") ? "true" : "false");
+        this.input.setAttribute("aria-invalid", this.hasAttribute("error") ? "true" : "false");
+
+        this.input.value = this.getAttribute("value") || "";
 
         if (this.hasAttribute("error")) {
             this.errorMessage.textContent = this.getAttribute("error");
             this.errorMessage.style.display = "block";
             this.inputContainer.classList.add("error");
+            this.input.setAttribute("aria-invalid", "true");
         } else {
             this.errorMessage.style.display = "none";
             this.inputContainer.classList.remove("error");

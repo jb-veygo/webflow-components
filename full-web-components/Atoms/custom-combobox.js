@@ -1,6 +1,6 @@
 class CustomCombobox extends HTMLElement {
     static get observedAttributes() {
-        return ["placeholder", "variant", "size", "disabled"];
+        return ["placeholder", "variant", "size", "disabled", "options"];
     }
 
     constructor() {
@@ -18,18 +18,22 @@ class CustomCombobox extends HTMLElement {
 
         // Input Container (for icons)
         this.inputContainer = document.createElement("div");
-        this.inputContainer.classList.add("combobox-container");
+        this.inputContainer.classList.add("combobox-container", "rounded-input");
 
         // Leading Icon Slot
         this.leadingIcon = document.createElement("span");
         this.leadingIcon.classList.add("leading-icon");
-        this.leadingIcon.innerHTML = `<slot name="leading-icon"></slot>`;
+        this.leadingIcon.innerHTML = `<svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h.001c.03.04.062.078.098.114l3.85 3.85a1 1 0 0 0 1.414-1.414l-3.85-3.85a1.007 1.007 0 0 0-.114-.098zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"></path></svg>`;
 
         // Input Field
         this.input = document.createElement("input");
         this.input.classList.add("custom-input");
         this.input.setAttribute("type", "text");
         this.input.setAttribute("autocomplete", "off");
+        this.input.setAttribute("role", "combobox");
+        this.input.setAttribute("aria-haspopup", "listbox");
+        this.input.setAttribute("aria-expanded", "false");
+        this.input.setAttribute("aria-autocomplete", "list");
 
         // Dropdown List
         this.dropdown = document.createElement("ul");
@@ -71,10 +75,9 @@ class CustomCombobox extends HTMLElement {
             .combobox-container {
                 display: flex;
                 align-items: center;
-                border: 1px solid var(--color-border, #ddd);
-                border-radius: var(--border-radius-md);
-                padding: var(--spacing-sm);
-                transition: border-color 0.2s ease-in-out;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.5rem;
+                padding: 0.75rem;
                 background: white;
                 cursor: pointer;
             }
@@ -100,24 +103,27 @@ class CustomCombobox extends HTMLElement {
                 left: 0;
                 width: 100%;
                 background: white;
-                border: 1px solid var(--color-border, #ddd);
-                border-radius: var(--border-radius-md);
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                list-style: none;
-                padding: 0;
-                margin: 4px 0 0 0;
-                max-height: 200px;
+                border-radius: 0.5rem;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                padding: 0.5rem 0;
+                max-height: 250px;
                 overflow-y: auto;
             }
 
             .combobox-dropdown li {
-                padding: var(--spacing-sm);
+                padding: 0.75rem;
                 cursor: pointer;
                 transition: background 0.2s;
+                font-size: 14px;
             }
 
-            .combobox-dropdown li:hover {
-                background: var(--color-muted, #f3f3f3);
+            .combobox-dropdown li:hover, .combobox-dropdown li:focus {
+                background: #e0e7ff;
+            }
+
+            .combobox-dropdown li:active {
+                background: #d1d5db;
             }
 
             /* Variants */
@@ -186,14 +192,18 @@ class CustomCombobox extends HTMLElement {
 
     showDropdown() {
         this.dropdown.style.display = "block";
+        this.input.setAttribute("aria-expanded", "true");
     }
 
     hideDropdown() {
         this.dropdown.style.display = "none";
+        this.input.setAttribute("aria-expanded", "false");
     }
 
     selectOption(value) {
         this.input.value = value;
+        this.input.setAttribute("aria-expanded", "false");
+        this.input.setAttribute("aria-activedescendant", "");
         this.hideDropdown();
     }
 

@@ -1,6 +1,6 @@
 class CustomLabel extends HTMLElement {
     static get observedAttributes() {
-        return ["for", "variant", "help"];
+        return ["for", "variant", "help", "hidden"];
     }
 
     constructor() {
@@ -13,6 +13,8 @@ class CustomLabel extends HTMLElement {
         this.label = document.createElement("label");
         this.label.classList.add("custom-label");
         this.label.innerHTML = `<slot></slot>`;
+        this.label.setAttribute("role", "label");
+        this.label.setAttribute("aria-hidden", this.hasAttribute("hidden") ? "true" : "false");
 
         this.helpText = document.createElement("span");
         this.helpText.classList.add("help-text");
@@ -29,8 +31,8 @@ class CustomLabel extends HTMLElement {
             }
 
             .custom-label {
-                font-size: var(--font-body, 14px);
-                color: var(--color-text, #333);
+                font-size: 14px;
+                color: #333;
                 font-weight: 500;
                 display: inline-block;
             }
@@ -41,18 +43,18 @@ class CustomLabel extends HTMLElement {
             }
 
             .custom-label.muted {
-                color: var(--color-muted, #666);
+                color: #666;
             }
 
             .custom-label.required::after {
                 content: " *";
-                color: var(--color-danger, red);
+                color: red;
             }
 
             /* Help Text */
             .help-text {
                 font-size: 12px;
-                color: var(--color-muted, #666);
+                color: #666;
             }
         `;
 
@@ -76,6 +78,7 @@ class CustomLabel extends HTMLElement {
         }
 
         this.label.className = `custom-label ${variant}`;
+        this.label.setAttribute("aria-hidden", this.hasAttribute("hidden") ? "true" : "false");
 
         if (helpText) {
             this.helpText.textContent = helpText;
