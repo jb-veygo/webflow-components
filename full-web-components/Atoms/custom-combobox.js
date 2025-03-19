@@ -13,10 +13,15 @@ class CustomCombobox extends HTMLElement {
             customElements.whenDefined("custom-command")
         ]).then(() => {
             console.log("All required components loaded. Initializing...");
-            this.options = JSON.parse(this.getAttribute("options") || "[]");
-            console.log("Parsed options:", this.options);
-            this.render();
+            this.options = [];
+            this.init();
         });
+    }
+
+    init() {
+        this.options = JSON.parse(this.getAttribute("options") || "[]");
+        console.log("Parsed options:", this.options);
+        this.render();
     }
 
     render() {
