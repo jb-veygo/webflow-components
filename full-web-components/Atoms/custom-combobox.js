@@ -6,26 +6,29 @@ class CustomCombobox extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
-        this.options = [];
+        this.options = JSON.parse(this.getAttribute("options") || "[]"); // Ensure options are set on initialization
         this.filteredOptions = [];
         this.selectedOptions = [];
         this.activeIndex = -1;
         this.isOpen = false;
+        this.popover = null;
+        this.listbox = null;
+        this.triggerButton = null;
         this.render();
     }
 
     connectedCallback() {
         this.searchInput = this.shadowRoot.querySelector(".combobox-search");
         this.popover = this.shadowRoot.querySelector(".combobox-popover");
-        if (this.popover) {
-            this.popover.style.display = "none"; // Ensure it's hidden initially
-        }
         this.listbox = this.shadowRoot.querySelector(".combobox-list");
         this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
-        
-        // Set options from attribute
-        this.options = JSON.parse(this.getAttribute("options") || "[]");
-        this.filteredOptions = [...this.options];
+
+        if (!this.searchInput || !this.popover || !this.listbox || !this.triggerButton) {
+            console.error("CustomCombobox: Missing required elements in shadow DOM");
+            return;
+        }
+
+        this.popover.style.display = "none"; // Ensure it's hidden initially
         this.renderOptions();
         
         this.searchInput.addEventListener("input", this.filterOptions.bind(this));
@@ -56,10 +59,10 @@ class CustomCombobox extends HTMLElement {
     }
 
     toggleDropdown() {
+        if (!this.popover || !this.triggerButton) return;
+        
         this.isOpen = !this.isOpen;
-        if (this.popover) {
-            this.popover.style.display = this.isOpen ? "block" : "none";
-        }
+        this.popover.style.display = this.isOpen ? "block" : "none";
         this.triggerButton.setAttribute("aria-expanded", this.isOpen.toString());
     }
 
@@ -77,6 +80,10 @@ class CustomCombobox extends HTMLElement {
 
     renderOptions() {
         this.listbox.innerHTML = "";
+        if (this.filteredOptions.length === 0) {
+            this.listbox.innerHTML = "<div class='combobox-option' style='color: #9ca3af; padding: 8px;'>No options found</div>";
+            return;
+        }
         this.filteredOptions.forEach((option, index) => {
             const optionElement = document.createElement("div");
             optionElement.classList.add("combobox-option");
@@ -120,6 +127,11 @@ class CustomCombobox extends HTMLElement {
                     border-radius: 6px;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                     z-index: 10;
+                    transition: opacity 0.2s ease-in-out;
+                }
+                .combobox-popover[open] {
+                    opacity: 1;
+                    display: block;
                 }
                 .combobox-option {
                     padding: 8px 12px;
