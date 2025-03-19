@@ -16,13 +16,13 @@ class CustomCombobox extends HTMLElement {
         this.shadowRoot.innerHTML = '';
 
         // Create Popover Component
-        if (!this.popover) {
+        if (!this.popover || !(this.popover instanceof HTMLElement)) {
             this.popover = document.createElement("custom-popover");
         }
         this.popover.classList.add("combobox-popover");
 
         // Create Command Component
-        if (!this.command) {
+        if (!this.command || !(this.command instanceof HTMLElement)) {
             this.command = document.createElement("custom-command");
         }
         this.command.classList.add("combobox-command");
