@@ -29,7 +29,6 @@ class CustomInput extends HTMLElement {
         this.input = document.createElement("input");
         this.input.classList.add("shadcn-input");
         this.input.setAttribute("id", "input-field");
-        this.label.setAttribute("for", "input-field");
         this.updateAttributes();
 
         // Trailing Icon Slot
