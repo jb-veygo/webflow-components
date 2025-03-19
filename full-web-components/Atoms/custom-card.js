@@ -69,6 +69,7 @@ class CustomCard extends HTMLElement {
 
         this.shadowRoot.appendChild(style);
         this.shadowRoot.appendChild(this.wrapper);
+        console.log("CustomCard component loaded successfully.");
     }
 
     attributeChangedCallback() {

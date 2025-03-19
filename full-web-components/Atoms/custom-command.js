@@ -2,7 +2,12 @@ class CustomCommand extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
-        this.options = JSON.parse(this.getAttribute("options") || "[]");
+        try {
+            this.options = JSON.parse(this.getAttribute("options") || "[]");
+        } catch (error) {
+            console.error("Invalid JSON format in options attribute:", error);
+            this.options = [];
+        }
         this.render();
     }
 
@@ -104,6 +109,10 @@ class CustomCommand extends HTMLElement {
     }
 
     updateList() {
+        if (!Array.isArray(this.options)) {
+            console.error("options is not an array:", this.options);
+            return;
+        }
         this.commandList.innerHTML = "";
         const searchTerm = this.commandInput.value.toLowerCase();
         
@@ -123,6 +132,7 @@ class CustomCommand extends HTMLElement {
                 this.commandList.appendChild(listItem);
             }
         });
+        console.log("CustomCommand component loaded successfully.");
     }
 }
 
