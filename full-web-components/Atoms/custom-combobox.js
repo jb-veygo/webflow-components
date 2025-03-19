@@ -65,24 +65,72 @@ class CustomCombobox extends HTMLElement {
                     display: flex;
                     flex-direction: column;
                     width: 100%;
+                    max-width: 320px;
                     position: relative;
                 }
 
-                .combobox-trigger {
+                .Polaris-TextField {
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 0.5rem;
-                    padding: 0.75rem;
+                    border: 1px solid #d1d5db;
+                    border-radius: 6px;
+                    padding: 8px;
                     background: white;
                     cursor: pointer;
                     transition: border-color 0.2s ease-in-out;
                 }
 
-                .combobox-trigger:focus {
+                .Polaris-TextField:focus-within {
                     border-color: #1e40af;
                     box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+                }
+
+                .Polaris-TextField__Input {
+                    flex-grow: 1;
+                    border: none;
+                    outline: none;
+                    font-size: 16px;
+                    padding: 4px 8px;
+                    background: none;
+                }
+
+                .Polaris-Icon {
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 8px;
+                    color: #6b7280;
+                }
+
+                .combobox-popover {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    width: 100%;
+                    background: white;
+                    border: 1px solid #d1d5db;
+                    border-radius: 6px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    z-index: 10;
+                }
+
+                .combobox-popover[open] {
+                    display: block;
+                }
+
+                .combobox-command {
+                    max-height: 200px;
+                    overflow-y: auto;
+                }
+
+                .combobox-option {
+                    padding: 8px 12px;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                }
+
+                .combobox-option:hover {
+                    background: #f3f4f6;
                 }
             </style>
         `;
