@@ -17,6 +17,9 @@ class CustomCombobox extends HTMLElement {
     connectedCallback() {
         this.searchInput = this.shadowRoot.querySelector(".combobox-search");
         this.popover = this.shadowRoot.querySelector(".combobox-popover");
+        if (this.popover) {
+            this.popover.style.display = "none"; // Ensure it's hidden initially
+        }
         this.listbox = this.shadowRoot.querySelector(".combobox-list");
         this.triggerButton = this.shadowRoot.querySelector(".combobox-trigger");
         
@@ -54,7 +57,10 @@ class CustomCombobox extends HTMLElement {
 
     toggleDropdown() {
         this.isOpen = !this.isOpen;
-        this.popover.style.display = this.isOpen ? "block" : "none";
+        if (this.popover) {
+            this.popover.style.display = this.isOpen ? "block" : "none";
+        }
+        this.triggerButton.setAttribute("aria-expanded", this.isOpen.toString());
     }
 
     selectOption(value) {
@@ -71,11 +77,13 @@ class CustomCombobox extends HTMLElement {
 
     renderOptions() {
         this.listbox.innerHTML = "";
-        this.filteredOptions.forEach(option => {
+        this.filteredOptions.forEach((option, index) => {
             const optionElement = document.createElement("div");
             optionElement.classList.add("combobox-option");
             optionElement.textContent = option;
             optionElement.tabIndex = 0;
+            optionElement.setAttribute("role", "option");
+            optionElement.setAttribute("aria-selected", index === this.activeIndex ? "true" : "false");
             optionElement.addEventListener("click", () => this.selectOption(option));
             this.listbox.appendChild(optionElement);
         });
