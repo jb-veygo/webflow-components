@@ -7,6 +7,7 @@ class CustomInput extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         this.wrapper = document.createElement("div");
+        console.log("CustomInput component loaded successfully.");
         this.render();
     }
 
@@ -137,6 +138,13 @@ class CustomInput extends HTMLElement {
                 this.input.classList.remove("error");
             }
         }
+        console.log("Attributes updated:", {
+            type: this.input.type,
+            placeholder: this.input.placeholder,
+            disabled: this.input.disabled,
+            value: this.input.value,
+            error: this.getAttribute("error")
+        });
     }
 }
 

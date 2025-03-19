@@ -18,6 +18,7 @@ class CustomButton extends HTMLElement {
         style.textContent = `
             :host {
                 display: inline-block;
+                flex-grow: 1;
             }
 
             .custom-button {
@@ -33,6 +34,7 @@ class CustomButton extends HTMLElement {
                 white-space: nowrap;
                 cursor: pointer;
                 user-select: none;
+                width: 100%;
             }
 
             .custom-button:focus-visible {
@@ -105,6 +107,7 @@ class CustomButton extends HTMLElement {
 
         this.shadowRoot.appendChild(style);
         this.shadowRoot.appendChild(this.button);
+        console.log("CustomButton component loaded successfully.");
     }
 
     attributeChangedCallback() {
