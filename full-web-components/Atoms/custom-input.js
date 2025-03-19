@@ -126,14 +126,16 @@ class CustomInput extends HTMLElement {
         this.input.disabled = this.hasAttribute("disabled");
         this.input.value = this.getAttribute("value") || "";
 
-        if (this.hasAttribute("error")) {
-            this.errorMessage.textContent = this.getAttribute("error");
-            this.errorMessage.style.display = "block";
-            this.input.classList.add("error");
-            this.input.setAttribute("aria-invalid", "true");
-        } else {
-            this.errorMessage.style.display = "none";
-            this.input.classList.remove("error");
+        if (this.errorMessage) {
+            if (this.hasAttribute("error")) {
+                this.errorMessage.textContent = this.getAttribute("error");
+                this.errorMessage.style.display = "block";
+                this.input.classList.add("error");
+                this.input.setAttribute("aria-invalid", "true");
+            } else {
+                this.errorMessage.style.display = "none";
+                this.input.classList.remove("error");
+            }
         }
     }
 }
