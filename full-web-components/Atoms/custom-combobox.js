@@ -14,6 +14,9 @@ class CustomCombobox extends HTMLElement {
         ]).then(() => {
             console.log("All required components loaded. Initializing...");
             this.options = [];
+            this.selectedOptions = [];
+            this.inputValue = "";
+            this.labelText = this.getAttribute("label") || "Search options";
             this.init();
         });
     }
@@ -27,12 +30,34 @@ class CustomCombobox extends HTMLElement {
     render() {
         this.shadowRoot.innerHTML = `
             <div class="combobox-wrapper">
+                <div class="Polaris-Labelled--hidden">
+                    <div class="Polaris-Labelled__LabelWrapper">
+                        <div class="Polaris-Label">
+                            <label id="combobox-label" for="combobox-input" class="Polaris-Label__Text">
+                                <span class="Polaris-Text--root Polaris-Text--bodyMd">${this.labelText}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="Polaris-Connected">
+                        <div class="Polaris-Connected__Item Polaris-Connected__Item--primary">
+                            <div class="Polaris-TextField">
+                                <div class="Polaris-TextField__Prefix Polaris-TextField__PrefixIcon" id="combobox-input-Prefix">
+                                    <span class="Polaris-Text--root Polaris-Text--bodyMd">
+                                        <span class="Polaris-Icon">
+                                            <svg viewBox="0 0 20 20" class="Polaris-Icon__Svg" focusable="false" aria-hidden="true">
+                                                <path fill-rule="evenodd" d="M12.323 13.383a5.5 5.5 0 1 1 1.06-1.06l2.897 2.897a.75.75 0 1 1-1.06 1.06l-2.897-2.897Zm.677-4.383a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"></path>
+                                            </svg>
+                                        </span>
+                                    </span>
+                                </div>
+                                <input id="combobox-input" role="combobox" placeholder="${this.getAttribute("placeholder") || "Search options"}" autocomplete="off" class="Polaris-TextField__Input" type="text" aria-labelledby="combobox-label combobox-input-Prefix" aria-invalid="false" aria-autocomplete="list" aria-expanded="false" data-1p-ignore="true" data-lpignore="true" data-form-type="other" value="" tabindex="0" aria-controls="combobox-list" aria-owns="combobox-list" data-state="closed">
+                                <div class="Polaris-TextField__Backdrop"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <custom-popover class="combobox-popover">
-                    <button class="combobox-trigger" aria-haspopup="true" aria-expanded="false">
-                        <span class="placeholder">${this.getAttribute("placeholder") || "Select an option"}</span>
-                    </button>
-                    <input type="text" class="combobox-search" placeholder="Search..." aria-label="Search options">
-                    <custom-command class="combobox-command"></custom-command>
+                    <custom-command id="combobox-list" class="combobox-command"></custom-command>
                 </custom-popover>
             </div>
             <style>
@@ -88,9 +113,25 @@ class CustomCombobox extends HTMLElement {
             }
         });
 
+        this.searchInput.addEventListener("input", () => {
+            const searchTerm = this.searchInput.value.toLowerCase();
+            this.inputValue = searchTerm;
+            
+            if (!searchTerm) {
+                this.command.setAttribute("options", JSON.stringify(this.options));
+                return;
+            }
+            
+            const filteredOptions = this.options.filter(option => option.toLowerCase().includes(searchTerm));
+            this.command.setAttribute("options", JSON.stringify(filteredOptions));
+        });
+
         this.command.addEventListener("option-selected", (event) => {
             console.log("Handling option selection event...");
-            this.triggerButton.querySelector(".placeholder").textContent = event.detail;
+            this.selectedOptions = [event.detail];
+            this.inputValue = event.detail;
+            this.searchInput.value = event.detail;
+            
             this.command.classList.remove("active");
             this.triggerButton.setAttribute("aria-expanded", "false");
             
@@ -102,11 +143,9 @@ class CustomCombobox extends HTMLElement {
             }));
         });
 
-        this.searchInput.addEventListener("input", () => {
-            const searchTerm = this.searchInput.value.toLowerCase();
-            const filteredOptions = this.options.filter(option => option.toLowerCase().includes(searchTerm));
-            this.command.setAttribute("options", JSON.stringify(filteredOptions));
-        });
+        this.searchInput.id = "combobox-input";
+        this.searchInput.setAttribute("aria-controls", "combobox-list");
+        this.searchInput.setAttribute("aria-owns", "combobox-list");
 
         console.log("CustomCombobox component loaded successfully.");
     }
