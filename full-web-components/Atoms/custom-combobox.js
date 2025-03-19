@@ -5,6 +5,8 @@ class CustomCombobox extends HTMLElement {
 
     constructor() {
         super();
+        this.wrapper = document.createElement("div");
+        this.wrapper.classList.add("combobox-wrapper");
         this.attachShadow({ mode: "open" });
         this.render();
     }
@@ -19,10 +21,6 @@ class CustomCombobox extends HTMLElement {
         // Create Command Component
         this.command = document.createElement("custom-command");
         this.command.classList.add("combobox-command");
-
-        // Create Wrapper
-        this.wrapper = document.createElement("div");
-        this.wrapper.classList.add("combobox-wrapper");
 
         // Create Input Button (Trigger for Popover)
         this.inputButton = document.createElement("button");
