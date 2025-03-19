@@ -1,7 +1,6 @@
 class CustomButton extends HTMLElement {
     static get observedAttributes() {
         return ["variant", "size", "disabled", "loading"];
-    }
 
     constructor() {
         super();
@@ -10,12 +9,12 @@ class CustomButton extends HTMLElement {
         this.button = document.createElement("button");
         this.button.classList.add("custom-button");
 
-        // Slot to allow icons & text inside the button
+        // Slot allows icons & text inside the button
         this.button.innerHTML = `<slot></slot>`;
 
         this.updateAttributes();
 
-        // ShadCN Styling
+        // ShadCN Direct Styling
         const style = document.createElement("style");
         style.textContent = `
             :host {
@@ -26,91 +25,89 @@ class CustomButton extends HTMLElement {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                gap: var(--spacing-xs);
-                padding: var(--spacing-md);
-                font-size: var(--font-body);
+                gap: 0.5rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
                 font-weight: 500;
-                border-radius: var(--border-radius-md);
+                border-radius: 0.375rem;
                 border: 1px solid transparent;
                 cursor: pointer;
                 transition: all 0.2s ease-in-out;
-                user-select: none;
-                outline: none;
                 text-align: center;
                 white-space: nowrap;
             }
 
             /* Variants */
             .custom-button.default {
-                background: var(--color-primary, #1e40af);
+                background: #1e40af;
                 color: white;
             }
 
             .custom-button.default:hover {
-                background: var(--color-primary-dark, #1e3a8a);
+                background: #1e3a8a;
             }
 
             .custom-button.outline {
                 background: transparent;
-                border: 1px solid var(--color-primary, #1e40af);
-                color: var(--color-primary, #1e40af);
+                border: 1px solid #1e40af;
+                color: #1e40af;
             }
 
             .custom-button.outline:hover {
-                background: var(--color-primary-light, rgba(30, 64, 175, 0.1));
+                background: rgba(30, 64, 175, 0.1);
             }
 
             .custom-button.ghost {
                 background: transparent;
-                color: var(--color-primary, #1e40af);
+                color: #1e40af;
             }
 
             .custom-button.ghost:hover {
-                background: var(--color-primary-light, rgba(30, 64, 175, 0.1));
+                background: rgba(30, 64, 175, 0.1);
             }
 
             .custom-button.destructive {
-                background: var(--color-danger, #dc2626);
+                background: #dc2626;
                 color: white;
             }
 
             .custom-button.destructive:hover {
-                background: var(--color-danger-dark, #b91c1c);
+                background: #b91c1c;
             }
 
             .custom-button.secondary {
-                background: var(--color-secondary, #64748b);
+                background: #64748b;
                 color: white;
             }
 
             .custom-button.secondary:hover {
-                background: var(--color-secondary-dark, #475569);
+                background: #475569;
             }
 
             .custom-button.link {
                 background: transparent;
-                color: var(--color-primary, #1e40af);
+                color: #1e40af;
                 text-decoration: underline;
             }
 
             .custom-button.link:hover {
-                color: var(--color-primary-dark, #1e3a8a);
+                color: #1e3a8a;
             }
 
             /* Sizes */
             .custom-button.sm {
-                padding: var(--spacing-xs) var(--spacing-sm);
-                font-size: 14px;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
             }
 
             .custom-button.md {
-                padding: var(--spacing-md) var(--spacing-lg);
-                font-size: 16px;
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
             }
 
             .custom-button.lg {
-                padding: var(--spacing-lg) var(--spacing-xl);
-                font-size: 18px;
+                padding: 0.75rem 1.25rem;
+                font-size: 1rem;
             }
 
             /* Disabled State */
