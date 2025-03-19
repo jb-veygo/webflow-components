@@ -17,11 +17,13 @@ class CustomPopover extends HTMLElement {
         this.triggerButton.classList.add("popover-trigger");
         this.triggerButton.innerHTML = `<slot name="trigger">Open</slot>`;
         this.triggerButton.setAttribute("aria-haspopup", "true");
+        this.triggerButton.setAttribute("aria-controls", "popover-content");
         this.triggerButton.setAttribute("aria-expanded", "false");
 
         // Popover Content
         this.popoverContent = document.createElement("div");
         this.popoverContent.classList.add("popover-content");
+        this.popoverContent.setAttribute("id", "popover-content");
         this.popoverContent.setAttribute("role", "dialog");
         this.popoverContent.setAttribute("aria-hidden", "true");
         this.popoverContent.innerHTML = `<slot></slot>`;
@@ -80,6 +82,22 @@ class CustomPopover extends HTMLElement {
             this.popoverContent.classList.toggle("active");
             this.triggerButton.setAttribute("aria-expanded", !isOpen);
             this.popoverContent.setAttribute("aria-hidden", isOpen);
+        });
+        
+        document.addEventListener("click", (event) => {
+            if (!this.contains(event.target)) {
+                this.popoverContent.classList.remove("active");
+                this.triggerButton.setAttribute("aria-expanded", "false");
+                this.popoverContent.setAttribute("aria-hidden", "true");
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                this.popoverContent.classList.remove("active");
+                this.triggerButton.setAttribute("aria-expanded", "false");
+                this.popoverContent.setAttribute("aria-hidden", "true");
+            }
         });
     }
 }
