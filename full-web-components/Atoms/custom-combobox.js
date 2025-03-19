@@ -7,6 +7,11 @@ class CustomCombobox extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         this.options = JSON.parse(this.getAttribute("options") || "[]");
+        this.popover = this.querySelector("custom-popover") || document.createElement("custom-popover");
+        this.popover.classList.add("combobox-popover");
+        if (!this.querySelector("custom-popover")) {
+            this.shadowRoot.appendChild(this.popover);
+        }
         this.render();
     }
 
@@ -16,11 +21,6 @@ class CustomCombobox extends HTMLElement {
         // Create Wrapper
         this.wrapper = document.createElement("div");
         this.wrapper.classList.add("combobox-wrapper");
-
-        // Create Popover Component
-        this.popover = document.createElement("custom-popover");
-        this.popover.classList.add("combobox-popover");
-        this.shadowRoot.appendChild(this.popover);
 
         // Create Input Field (Trigger for Popover)
         this.inputButton = document.createElement("button");
