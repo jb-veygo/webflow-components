@@ -18,6 +18,11 @@ class CustomCombobox extends HTMLElement {
         this.popover = document.createElement("custom-popover");
         this.popover.classList.add("combobox-popover");
 
+        if (!this.popover) {
+            console.error("Popover component not found");
+            return;
+        }
+
         // Create Command Component
         this.command = document.createElement("custom-command");
         this.command.classList.add("combobox-command");
