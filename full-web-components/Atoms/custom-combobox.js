@@ -142,7 +142,12 @@ class CustomCombobox extends HTMLElement {
         
         // Ensure the popover attribute is not incorrectly set
         if (this.hasAttribute("popover")) {
-            console.warn("Removing invalid popover attribute from custom-combobox");
+            const popoverValue = this.getAttribute("popover");
+            if (["hint", "manual", "auto"].includes(popoverValue)) {
+                console.warn(`Removing popover attribute with valid value ('${popoverValue}') from custom-combobox because it is not intended to be set on this element.`);
+            } else {
+                console.warn("Removing invalid popover attribute from custom-combobox");
+            }
             this.removeAttribute("popover");
         }
 
