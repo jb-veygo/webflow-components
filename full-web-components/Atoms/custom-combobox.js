@@ -10,6 +10,7 @@ class CustomCombobox extends HTMLElement {
         this.selectedOptions = [];
         this.activeIndex = -1;
         this.isOpen = false;
+        this.popover = null;
         this.render();
     }
 
