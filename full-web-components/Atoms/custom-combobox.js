@@ -7,9 +7,16 @@ class CustomCombobox extends HTMLElement {
         super();
         this.attachShadow({ mode: "open" });
         console.log("Initializing CustomCombobox component...");
-        this.options = JSON.parse(this.getAttribute("options") || "[]");
-        console.log("Parsed options:", this.options);
-        this.render();
+        console.log("Waiting for required components to load...");
+        Promise.all([
+            customElements.whenDefined("custom-popover"),
+            customElements.whenDefined("custom-command")
+        ]).then(() => {
+            console.log("All required components loaded. Initializing...");
+            this.options = JSON.parse(this.getAttribute("options") || "[]");
+            console.log("Parsed options:", this.options);
+            this.render();
+        });
     }
 
     render() {
@@ -22,7 +29,11 @@ class CustomCombobox extends HTMLElement {
 
         console.log("Creating popover component...");
         // Create Popover Component
-        this.popover = document.createElement("custom-popover");
+        this.popover = this.querySelector("custom-popover") || document.createElement("custom-popover");
+        if (!(this.popover instanceof HTMLElement)) {
+            console.error("Popover component is not properly initialized.");
+            return;
+        }
         this.popover.classList.add("combobox-popover");
 
         console.log("Creating command component with options:", this.options);
