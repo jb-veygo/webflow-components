@@ -1,6 +1,6 @@
 class CustomInput extends HTMLElement {
     static get observedAttributes() {
-        return ["type", "placeholder", "disabled", "value"];
+        return ["type", "placeholder", "disabled", "value", "error"];
     }
 
     constructor() {
@@ -28,6 +28,8 @@ class CustomInput extends HTMLElement {
         // Input Field
         this.input = document.createElement("input");
         this.input.classList.add("shadcn-input");
+        this.input.setAttribute("id", "input-field");
+        this.label.setAttribute("for", "input-field");
         this.updateAttributes();
 
         // Trailing Icon Slot
@@ -65,7 +67,6 @@ class CustomInput extends HTMLElement {
             }
 
             .shadcn-input {
-                display: flex;
                 width: 100%;
                 padding: 0.75rem;
                 font-size: 0.875rem;
@@ -74,10 +75,10 @@ class CustomInput extends HTMLElement {
                 background: white;
                 color: #111827;
                 transition: border-color 0.2s ease-in-out;
+                outline: none;
             }
 
             .shadcn-input:focus {
-                outline: none;
                 border-color: #1e40af;
                 box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
             }
@@ -152,11 +153,11 @@ class CustomInput extends HTMLElement {
         if (this.hasAttribute("error")) {
             this.errorMessage.textContent = this.getAttribute("error");
             this.errorMessage.style.display = "block";
-            this.inputContainer.classList.add("error");
+            this.input.classList.add("error");
             this.input.setAttribute("aria-invalid", "true");
         } else {
             this.errorMessage.style.display = "none";
-            this.inputContainer.classList.remove("error");
+            this.input.classList.remove("error");
         }
     }
 }
