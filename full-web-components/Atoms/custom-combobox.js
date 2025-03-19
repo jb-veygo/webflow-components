@@ -56,7 +56,7 @@ class CustomCombobox extends HTMLElement {
                         </div>
                     </div>
                 </div>
-                <custom-popover class="combobox-popover">
+                <custom-popover class="combobox-popover" id="combobox-popover">
                     <custom-command id="combobox-list" class="combobox-command"></custom-command>
                 </custom-popover>
             </div>
