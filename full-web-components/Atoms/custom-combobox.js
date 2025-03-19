@@ -22,7 +22,9 @@ class CustomCombobox extends HTMLElement {
         this.popover.classList.add("combobox-popover");
 
         // Create Command Component
-        this.command = document.createElement("custom-command");
+        if (!this.command) {
+            this.command = document.createElement("custom-command");
+        }
         this.command.classList.add("combobox-command");
         this.command.setAttribute("options", JSON.stringify(this.options));
 
