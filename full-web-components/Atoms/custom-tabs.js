@@ -6,7 +6,16 @@ class CustomTabs extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
-        this.tabs = JSON.parse(this.getAttribute("tabs") || "[]");
+        try {
+            this.tabs = JSON.parse(this.getAttribute("tabs") || "[]");
+        } catch (e) {
+            console.error("Error parsing tabs attribute: ", e);
+            this.tabs = [];
+        }
+        if (!Array.isArray(this.tabs) || this.tabs.length === 0) {
+            console.warn("No valid tabs provided. Ensure the 'tabs' attribute is a JSON-encoded array.");
+            return;
+        }
         this.activeTab = this.getAttribute("active") || (this.tabs.length > 0 ? this.tabs[0].id : "");
         this.render();
     }
