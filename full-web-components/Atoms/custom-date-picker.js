@@ -9,7 +9,6 @@ class CustomDatePicker extends HTMLElement {
         this.selectedDate = "";
         this.mode = this.getAttribute("mode") || "single";
         this.render();
-        this.addEventListener("click", (e) => e.stopPropagation());
     }
 
     connectedCallback() {
