@@ -71,8 +71,12 @@ class CustomInput extends HTMLElement {
                 font-weight: 600;
             }
 
+            .input-container {
+                display: flex;
+            }
+
             .shadcn-input {
-                width: 100%;
+                flex-grow: 1;
                 padding: 0.75rem;
                 font-size: 0.875rem;
                 border-radius: 0.5rem;
