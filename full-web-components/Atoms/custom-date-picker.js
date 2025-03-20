@@ -17,7 +17,15 @@ class CustomDatePicker extends HTMLElement {
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
         this.calendar.style.display = "none"; // Remove popover reference
 
-        this.trailingIcon.addEventListener("click", () => this.toggleCalendar());
+        this.inputField.addEventListener("click", (event) => {
+            event.stopPropagation();
+            this.toggleCalendar();
+        });
+        this.trailingIcon.addEventListener("click", (event) => {
+            event.stopPropagation();
+            this.toggleCalendar();
+        });
+        document.addEventListener("click", (event) => this.handleOutsideClick(event));
         this.calendar.addEventListener("date-select", (event) => this.handleDateSelection(event.detail));
     }
 
