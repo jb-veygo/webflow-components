@@ -23,7 +23,11 @@ class CustomDatePicker extends HTMLElement {
 
     toggleCalendar() {
         this.isOpen = !this.isOpen;
-        this.popover.style.display = this.isOpen ? "block" : "none";
+        if (this.calendar) {
+            this.calendar.style.display = this.isOpen ? "block" : "none";
+        } else {
+            console.error("custom-calendar element not found");
+        }
     }
 
     handleDateSelection(selected) {
