@@ -13,16 +13,17 @@ class CustomDatePicker extends HTMLElement {
 
     connectedCallback() {
         this.inputField = this.shadowRoot.querySelector("custom-input");
+        this.trailingIcon = this.shadowRoot.querySelector(".date-picker-icon");
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
         this.popover = this.shadowRoot.querySelector(".date-picker-popover");
-        
-        this.inputField.addEventListener("focus", () => this.toggleCalendar(true));
-        this.inputField.addEventListener("blur", () => setTimeout(() => this.toggleCalendar(false), 200));
+
+        this.trailingIcon.addEventListener("click", () => this.toggleCalendar());
         this.calendar.addEventListener("date-select", (event) => this.handleDateSelection(event.detail));
     }
 
-    toggleCalendar(open) {
-        this.popover.style.display = open ? "block" : "none";
+    toggleCalendar() {
+        this.isOpen = !this.isOpen;
+        this.popover.style.display = this.isOpen ? "block" : "none";
     }
 
     handleDateSelection(selected) {
@@ -33,7 +34,7 @@ class CustomDatePicker extends HTMLElement {
         }
         this.inputField.setAttribute("value", this.selectedDate);
         this.dispatchEvent(new CustomEvent("change", { detail: this.selectedDate }));
-        this.toggleCalendar(false);
+        this.toggleCalendar();
     }
 
     render() {
@@ -41,8 +42,18 @@ class CustomDatePicker extends HTMLElement {
             <style>
                 .date-picker-wrapper {
                     position: relative;
-                    display: inline-block;
+                    display: flex;
+                    align-items: center;
                     width: 100%;
+                    max-width: 320px;
+                }
+                .date-picker-icon {
+                    cursor: pointer;
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 5;
                 }
                 .date-picker-popover {
                     display: none;
@@ -59,6 +70,7 @@ class CustomDatePicker extends HTMLElement {
             </style>
             <div class="date-picker-wrapper">
                 <custom-input placeholder="Select date"></custom-input>
+                <span class="date-picker-icon">📅</span>
                 <div class="date-picker-popover">
                     <custom-calendar mode="${this.mode}"></custom-calendar>
                 </div>
