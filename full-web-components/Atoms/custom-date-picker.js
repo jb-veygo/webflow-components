@@ -8,6 +8,7 @@ class CustomDatePicker extends HTMLElement {
         this.attachShadow({ mode: "open" });
         this.selectedDate = "";
         this.mode = this.getAttribute("mode") || "single";
+        this.isOpen = false; // Track calendar visibility
         this.render();
     }
 
@@ -17,13 +18,24 @@ class CustomDatePicker extends HTMLElement {
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
         this.popover = this.shadowRoot.querySelector(".date-picker-popover");
 
+        this.calendar.style.display = "none";
         this.trailingIcon.addEventListener("click", () => this.toggleCalendar());
+        document.addEventListener("click", (event) => this.handleOutsideClick(event));
         this.calendar.addEventListener("date-select", (event) => this.handleDateSelection(event.detail));
+        this.inputField.addEventListener("click", (event) => event.stopPropagation()); // Prevents closing when clicking input
+        this.calendar.addEventListener("click", (event) => event.stopPropagation()); // Prevents closing when clicking calendar
     }
 
     toggleCalendar() {
         this.isOpen = !this.isOpen;
-        this.popover.style.display = this.isOpen ? "block" : "none";
+        this.calendar.style.display = this.isOpen ? "block" : "none";
+    }
+
+    handleOutsideClick(event) {
+        if (!this.contains(event.target)) {
+            this.isOpen = false;
+            this.calendar.style.display = "none";
+        }
     }
 
     handleDateSelection(selected) {
@@ -55,7 +67,7 @@ class CustomDatePicker extends HTMLElement {
                     transform: translateY(-50%);
                     z-index: 5;
                 }
-                .date-picker-popover {
+                .calendar-container {
                     display: none;
                     position: absolute;
                     top: 100%;
@@ -72,7 +84,7 @@ class CustomDatePicker extends HTMLElement {
                 <custom-input placeholder="Select date"></custom-input>
                 <span class="date-picker-icon">📅</span>
                 <div class="date-picker-popover">
-                    <custom-calendar mode="${this.mode}"></custom-calendar>
+                    <custom-calendar class="calendar-container" mode="${this.mode}"></custom-calendar>
                 </div>
             </div>
         `;
