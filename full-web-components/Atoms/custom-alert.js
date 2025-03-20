@@ -1,12 +1,13 @@
 class CustomAlert extends HTMLElement {
     static get observedAttributes() {
-        return ["type", "message"];
+        return ["type", "title", "message"];
     }
 
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
         this.type = this.getAttribute("type") || "info";
+        this.title = this.getAttribute("title") || "Alert";
         this.message = this.getAttribute("message") || "Default alert message";
         this.render();
     }
@@ -46,6 +47,16 @@ class CustomAlert extends HTMLElement {
                     cursor: pointer;
                     font-size: 16px;
                 }
+                .alert-content {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .alert-title {
+                    font-weight: bold;
+                }
+                .alert-message {
+                    margin-top: 4px;
+                }
                 .alert.info {
                     background-color: #dbeafe;
                     color: #1e40af;
@@ -65,7 +76,10 @@ class CustomAlert extends HTMLElement {
             </style>
             <div class="alert ${this.type}">
                 <span class="alert-icon">⚠️</span>
-                <span>${this.message}</span>
+                <div class="alert-content">
+                    <div class="alert-title">${this.title}</div>
+                    <div class="alert-message">${this.message}</div>
+                </div>
                 <button class="alert-close">✖</button>
             </div>
         `;
