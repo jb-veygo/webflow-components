@@ -8,6 +8,7 @@ class CustomDatePicker extends HTMLElement {
         this.attachShadow({ mode: "open" });
         this.selectedDate = "";
         this.mode = this.getAttribute("mode") || "single";
+        this.isOpen = false;
         this.render();
     }
 
@@ -16,13 +17,18 @@ class CustomDatePicker extends HTMLElement {
         this.trailingIcon = this.shadowRoot.querySelector(".date-picker-icon");
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
         this.popover = this.shadowRoot.querySelector(".date-picker-popover");
-        this.calendar.style.display = "none"; // Remove popover reference
+        if (!this.inputField || !this.trailingIcon || !this.calendar || !this.popover) {
+            console.error("One or more elements not found in the custom-date-picker component.");
+            return;
+        }
 
         this.inputField.addEventListener("click", (event) => {
+            console.log("Click event triggered on input field");
             event.stopPropagation();
             this.toggleCalendar();
         });
         this.trailingIcon.addEventListener("click", (event) => {
+            console.log("Click event triggered on icon");
             event.stopPropagation();
             this.toggleCalendar();
         });
@@ -31,9 +37,11 @@ class CustomDatePicker extends HTMLElement {
     }
 
     toggleCalendar() {
+        console.log("Toggling calendar. Current state:", this.isOpen);
         this.isOpen = !this.isOpen;
         if (this.calendar && this.popover) {
             const displayState = this.isOpen ? "block" : "none";
+            console.log("Setting display state to:", displayState);
             this.calendar.style.display = displayState;
             this.popover.style.display = displayState;
             this.calendar.setAttribute("aria-hidden", !this.isOpen);
@@ -44,11 +52,13 @@ class CustomDatePicker extends HTMLElement {
     }
 
     handleDateSelection(selected) {
+        console.log("Date selected:", selected);
         if (this.mode === "single") {
             this.selectedDate = selected[0];
         } else if (this.mode === "range" || this.mode === "multi") {
             this.selectedDate = selected.join(", ");
         }
+        console.log("Setting input value to:", this.selectedDate);
         this.inputField.setAttribute("value", this.selectedDate);
         this.dispatchEvent(new CustomEvent("change", { detail: this.selectedDate }));
         this.toggleCalendar();
