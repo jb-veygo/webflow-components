@@ -40,12 +40,17 @@ class CustomDatePicker extends HTMLElement {
         console.log("Toggling calendar. Current state:", this.isOpen);
         this.isOpen = !this.isOpen;
         if (this.calendar && this.popover) {
-            const displayState = this.isOpen ? "block" : "none";
-            console.log("Setting display state to:", displayState);
-            this.calendar.style.display = displayState;
-            this.popover.style.display = displayState;
-            this.calendar.setAttribute("aria-hidden", !this.isOpen);
-            this.popover.setAttribute("aria-hidden", !this.isOpen);
+            if (this.isOpen) {
+                this.calendar.style.visibility = "visible";
+                this.calendar.style.opacity = "1";
+                this.popover.style.visibility = "visible";
+                this.popover.style.opacity = "1";
+            } else {
+                this.calendar.style.visibility = "hidden";
+                this.calendar.style.opacity = "0";
+                this.popover.style.visibility = "hidden";
+                this.popover.style.opacity = "0";
+            }
         } else {
             console.error("custom-calendar or date-picker-popover element not found");
         }
