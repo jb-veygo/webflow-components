@@ -33,6 +33,7 @@ class CustomDatePicker extends HTMLElement {
         this.isOpen = !this.isOpen;
         if (this.calendar) {
             this.calendar.style.display = this.isOpen ? "block" : "none";
+            this.calendar.setAttribute("aria-hidden", !this.isOpen);
         } else {
             console.error("custom-calendar element not found");
         }
@@ -68,7 +69,9 @@ class CustomDatePicker extends HTMLElement {
                     z-index: 5;
                 }
                 .date-picker-popover {
-                    display: none;
+                    visibility: hidden;
+                    opacity: 0;
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
                     position: absolute;
                     top: 100%;
                     left: 0;
@@ -78,6 +81,10 @@ class CustomDatePicker extends HTMLElement {
                     border: 1px solid #d1d5db;
                     border-radius: 6px;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                }
+                .date-picker-popover[aria-hidden="false"] {
+                    visibility: visible;
+                    opacity: 1;
                 }
             </style>
             <div class="date-picker-wrapper">
