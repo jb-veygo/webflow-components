@@ -1,6 +1,6 @@
 class CustomAlert extends HTMLElement {
     static get observedAttributes() {
-        return ["type", "title", "message"];
+        return ["type", "title", "message", "closeable"];
     }
 
     constructor() {
@@ -9,15 +9,19 @@ class CustomAlert extends HTMLElement {
         this.type = this.getAttribute("type") || "info";
         this.title = this.getAttribute("title") || "Alert";
         this.message = this.getAttribute("message") || "Default alert message";
+        this.closeable = this.hasAttribute("closeable");
         this.render();
     }
 
     connectedCallback() {
-        this.shadowRoot.querySelector(".alert-close").addEventListener("click", () => this.remove());
+        if (this.closeable) {
+            this.shadowRoot.querySelector(".alert-close").addEventListener("click", () => this.remove());
+        }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         if (oldValue !== newValue) {
+            this.closeable = this.hasAttribute("closeable");
             this[name] = newValue;
             this.render();
         }
@@ -80,7 +84,7 @@ class CustomAlert extends HTMLElement {
                     <div class="alert-title">${this.title}</div>
                     <div class="alert-message">${this.message}</div>
                 </div>
-                <button class="alert-close">✖</button>
+                ${this.closeable ? '<button class="alert-close">✖</button>' : ''}
             </div>
         `;
     }
