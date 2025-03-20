@@ -56,10 +56,11 @@ class CustomSelect extends HTMLElement {
             <style>
                 .select-container {
                     position: relative;
-                    display: inline-block;
-                    width: 200px;
+                    display: flex;
+                    
                 }
                 .select-trigger {
+                    flex-grow: 1;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
