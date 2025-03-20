@@ -15,6 +15,7 @@ class CustomDatePicker extends HTMLElement {
         this.inputField = this.shadowRoot.querySelector("custom-input");
         this.trailingIcon = this.shadowRoot.querySelector(".date-picker-icon");
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
+        this.popover = this.shadowRoot.querySelector(".date-picker-popover");
         this.calendar.style.display = "none"; // Remove popover reference
 
         this.inputField.addEventListener("click", (event) => {
@@ -31,11 +32,14 @@ class CustomDatePicker extends HTMLElement {
 
     toggleCalendar() {
         this.isOpen = !this.isOpen;
-        if (this.calendar) {
-            this.calendar.style.display = this.isOpen ? "block" : "none";
+        if (this.calendar && this.popover) {
+            const displayState = this.isOpen ? "block" : "none";
+            this.calendar.style.display = displayState;
+            this.popover.style.display = displayState;
             this.calendar.setAttribute("aria-hidden", !this.isOpen);
+            this.popover.setAttribute("aria-hidden", !this.isOpen);
         } else {
-            console.error("custom-calendar element not found");
+            console.error("custom-calendar or date-picker-popover element not found");
         }
     }
 
