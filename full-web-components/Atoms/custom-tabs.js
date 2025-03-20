@@ -42,34 +42,37 @@ class CustomTabs extends HTMLElement {
             <style>
                 .tabs-container {
                     display: flex;
-                    gap: 4px;
-                    border-bottom: 2px solid #e5e7eb;
+                    gap: 8px;
+                    background-color: #f3f3f3;
+                    padding: 4px;
+                    border-radius: 8px;
                 }
                 .tab-button {
                     flex: none;
-                    padding: 8px 16px;
+                    padding: 10px 16px;
                     background: transparent;
                     border: none;
                     cursor: pointer;
                     font-weight: 500;
-                    transition: all 0.2s;
-                    color: #374151;
-                    border-radius: 4px;
                     font-size: 14px;
+                    border-radius: 6px;
+                    color: #1c1c1c;
+                    transition: background-color 0.2s ease, color 0.2s ease;
                 }
                 .tab-button.active {
-                    color: #111827;
-                    background-color: #e5e7eb;
-                    border-bottom: 2px solid #1e40af;
+                    background-color: white;
+                    color: black;
+                    font-weight: bold;
                 }
                 .tab-button:hover {
-                    background-color: #f3f4f6;
+                    background-color: rgba(0, 0, 0, 0.1);
                 }
                 .tab-content {
                     display: none;
                     padding: 16px;
                     background: white;
-                    border-radius: 4px;
+                    border-radius: 6px;
+                    color: black;
                 }
                 .tab-content.active {
                     display: block;
@@ -77,15 +80,15 @@ class CustomTabs extends HTMLElement {
             </style>
             <div class="tabs-container">
                 ${this.tabs.map(tab => `
-                    <button class="tab-button ${tab.id === this.activeTab ? 'active' : ''}" data-tab="${tab.id}">
+                    <button class="tab-button ${tab.id === this.activeTab ? 'active' : ''}" data-tab="${tab.id}" role="tab" aria-selected="${tab.id === this.activeTab}">
                         ${tab.label}
                     </button>
                 `).join("")}
             </div>
             <div class="tab-contents">
                 ${this.tabs.map(tab => `
-                    <div class="tab-content ${tab.id === this.activeTab ? 'active' : ''}" data-tab="${tab.id}">
-                        ${tab.content}
+                    <div class="tab-content ${tab.id === this.activeTab ? 'active' : ''}" data-tab="${tab.id}" role="tabpanel" aria-hidden="${tab.id !== this.activeTab}">
+                        ${tab.content || ""}
                     </div>
                 `).join("")}
             </div>
