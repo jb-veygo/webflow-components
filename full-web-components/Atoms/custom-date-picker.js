@@ -8,16 +8,17 @@ class CustomDatePicker extends HTMLElement {
         this.attachShadow({ mode: "open" });
         this.selectedDate = "";
         this.mode = this.getAttribute("mode") || "single";
-        this.isOpen = false;
+        this.isOpen = false; // Remove popover reference
         this.render();
+        this.calendarContainer = null;
     }
 
     connectedCallback() {
         this.inputField = this.shadowRoot.querySelector("custom-input");
         this.trailingIcon = this.shadowRoot.querySelector(".date-picker-icon");
         this.calendar = this.shadowRoot.querySelector("custom-calendar");
-        this.popover = this.shadowRoot.querySelector(".date-picker-popover");
-        if (!this.inputField || !this.trailingIcon || !this.calendar || !this.popover) {
+        this.calendarContainer = this.shadowRoot.querySelector(".calendar-container");
+        if (!this.inputField || !this.trailingIcon || !this.calendar || !this.calendarContainer) {
             console.error("One or more elements not found in the custom-date-picker component.");
             return;
         }
@@ -39,20 +40,20 @@ class CustomDatePicker extends HTMLElement {
     toggleCalendar() {
         console.log("Toggling calendar. Current state:", this.isOpen);
         this.isOpen = !this.isOpen;
-        if (this.calendar && this.popover) {
+        if (this.calendar && this.calendarContainer) {
             if (this.isOpen) {
                 this.calendar.style.visibility = "visible";
                 this.calendar.style.opacity = "1";
-                this.popover.style.visibility = "visible";
-                this.popover.style.opacity = "1";
+                this.calendarContainer.style.visibility = "visible";
+                this.calendarContainer.style.opacity = "1";
             } else {
                 this.calendar.style.visibility = "hidden";
                 this.calendar.style.opacity = "0";
-                this.popover.style.visibility = "hidden";
-                this.popover.style.opacity = "0";
+                this.calendarContainer.style.visibility = "hidden";
+                this.calendarContainer.style.opacity = "0";
             }
         } else {
-            console.error("custom-calendar or date-picker-popover element not found");
+            console.error("custom-calendar or calendar-container element not found");
         }
     }
 
@@ -87,7 +88,7 @@ class CustomDatePicker extends HTMLElement {
                     transform: translateY(-50%);
                     z-index: 5;
                 }
-                .date-picker-popover {
+                .calendar-container {
                     visibility: hidden;
                     opacity: 0;
                     transition: opacity 0.2s ease, visibility 0.2s ease;
@@ -101,7 +102,7 @@ class CustomDatePicker extends HTMLElement {
                     border-radius: 6px;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 }
-                .date-picker-popover[aria-hidden="false"] {
+                .calendar-container[aria-hidden="false"] {
                     visibility: visible;
                     opacity: 1;
                 }
@@ -109,7 +110,7 @@ class CustomDatePicker extends HTMLElement {
             <div class="date-picker-wrapper">
                 <custom-input placeholder="Select date"></custom-input>
                 <span class="date-picker-icon">📅</span>
-                <div class="date-picker-popover">
+                <div class="calendar-container">
                     <custom-calendar mode="${this.mode}"></custom-calendar>
                 </div>
             </div>
