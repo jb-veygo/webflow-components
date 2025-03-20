@@ -92,6 +92,7 @@ class CustomTabs extends HTMLElement {
                     </div>
                 `).join("")}
             </div>
+            </div>
         `;
     }
 }
