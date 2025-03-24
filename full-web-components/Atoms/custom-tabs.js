@@ -6,12 +6,25 @@ class CustomTabs extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: "open" });
+        const tabsAttr = this.getAttribute("tabs") || "[]";
+        let parsedTabs;
+
+        // Check if the attribute is a JSON array of strings or an array of objects
         try {
-            this.tabs = JSON.parse(this.getAttribute("tabs") || "[]");
+            parsedTabs = JSON.parse(tabsAttr);
         } catch (e) {
             console.error("Error parsing tabs attribute:", e);
-            this.tabs = [];
+            parsedTabs = [];
         }
+
+        // Normalize the tabs into the object format { id, label }
+        this.tabs = Array.isArray(parsedTabs) ? parsedTabs.map(tab => {
+            if (typeof tab === "string") {
+                return { id: tab, label: tab.charAt(0).toUpperCase() + tab.slice(1) }; // Default label from id
+            }
+            return tab;
+        }) : [];
+
         this.activeTab = this.getAttribute("active") || (this.tabs.length > 0 ? this.tabs[0].id : "");
         this.render();
     }
